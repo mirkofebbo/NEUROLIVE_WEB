@@ -79,7 +79,7 @@ const DW = () => {
         </Button>
       </div>
       <video width="750" height="500" controls>
-        <source src="http://localhost:5000/data/dw/video/sat/test.mp4" type="video/mp4" />
+        <source src="http://158.223.47.108:5000/data/dw/video/sat/test.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
