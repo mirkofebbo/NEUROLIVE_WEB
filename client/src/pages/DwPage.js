@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Container, FormControl, FormControlLabel, Checkbox, Button, Grid } from '@mui/material';
-import { csv } from 'd3';
+import axios from 'axios';
+import { csvParse } from 'd3';
 import DwChart from '../componants/charts/DwChart';
 
 const DW = () => {
@@ -8,13 +9,28 @@ const DW = () => {
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [allParticipants, setAllParticipants] = useState([]);
 
+  const API_KEY = process.env.API_KEY;
+
   useEffect(() => {
-    csv('/small_breathing.csv').then(parsedData => {
-      const participants = Object.keys(parsedData[0]).filter(key => key !== 'index');
-      setData(parsedData);
-      setAllParticipants(participants);
-      setSelectedParticipants(participants); // Set all participants as default
-    });
+
+    const config = {
+      headers: {
+        'api-key': API_KEY
+      }
+    };
+    // Fetch data from your backend server
+    axios.get('http://158.223.47.108:5000/data/dw/breathing/sat/small_breathing.csv', config)
+      .then(response => {
+        // Assuming the server returns the CSV file as a string
+        const parsedData = csvParse(response.data);
+        const participants = Object.keys(parsedData[0]).filter(key => key !== 'index');
+        setData(parsedData);
+        setAllParticipants(participants);
+        setSelectedParticipants(participants); // Set all participants as default
+      })
+      .catch(error => {
+        console.error("Error fetching data: ", error);
+      });
   }, []);
 
   const handleParticipantChange = (event) => {
@@ -62,6 +78,11 @@ const DW = () => {
           Deselect All
         </Button>
       </div>
+      <video width="750" height="500" controls>
+        <source src="http://localhost:5000/data/dw/video/sat/test.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
       <DwChart data={data} selectedParticipants={selectedParticipants} />
     </>
   );

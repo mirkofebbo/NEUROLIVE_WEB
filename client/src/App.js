@@ -8,7 +8,7 @@ import Albane from './pages/Albane';
 import Test from './pages/Test';
 
 function App() {
-  const [page, setPage] = useState('HomePage');
+  const [page, setPage] = useState('DwPage');
 
   return (
     <div>

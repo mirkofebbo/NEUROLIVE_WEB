@@ -40,7 +40,7 @@ const Theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: 'white',
+          backgroundColor: prussian_blue,
           color: tiffany_blue,
         }
       }
