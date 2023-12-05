@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, Button, useMediaQuery, FormControl, Select, MenuItem} from '@mui/material';
-import { csv } from 'd3';
-import DwChart from '../componants/charts/DwChart';
+import { Typography, Grid, Button, useMediaQuery, FormControl, Select, MenuItem, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import DwChart from '../componants/charts/DwChart';
+import DataLoader from '../componants/utils/DataLoader';
+
+const fetchData = async (day, type, setData) => {
+  const dataLoader = new DataLoader();
+  const parsedData = await dataLoader.fetchCsvData('DW', day, type);
+  return parsedData || []; 
+};
 
 const DW = () => {
   const [data, setData] = useState([]);
@@ -13,12 +19,16 @@ const DW = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    csv('/small_breathing.csv').then(parsedData => {
-      const participants = Object.keys(parsedData[0]).filter(key => key !== 'index');
-      setData(parsedData);
-      setAllParticipants(participants);
-      setSelectedParticipants(participants); // Set all participants as default
-    });
+    const loadData = async () => {
+      const fetchedData = await fetchData('ALL', 'breathing');
+      setData(fetchedData);
+      if (fetchedData.length > 0) {
+        const participants = Object.keys(fetchedData[0]).filter(key => key !== 'index');
+        setAllParticipants(participants);
+        setSelectedParticipants(participants);
+      }
+    };
+    loadData();
   }, []);
 
   const handleParticipantChange = (event) => {
@@ -26,10 +36,10 @@ const DW = () => {
   };
 
   const handleParticipantButtonClick = (participant) => {
-    setSelectedParticipants(prev => 
+    setSelectedParticipants(prev =>
       prev.includes(participant)
-      ? prev.filter(p => p !== participant)
-      : [...prev, participant]
+        ? prev.filter(p => p !== participant)
+        : [...prev, participant]
     );
   };
 
@@ -68,7 +78,7 @@ const DW = () => {
             </Select>
           </FormControl>
         ) : (
-          <Grid item style={{width: "150px"}} md={2} >
+          <Grid item style={{ width: "150px" }} md={2} >
             <Grid container spacing={1}>
               {allParticipants.map((participant, index) => (
                 <Grid item xs={6} key={participant}>
@@ -95,8 +105,17 @@ const DW = () => {
         )}
         {/* Chart column */}
         <Grid item xs={12} md={8}>
-          <DwChart data={data} selectedParticipants={selectedParticipants} />
+          {data.length === 0 ? (
+            // Render loading animation when data is not loaded
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <CircularProgress />
+            </div>
+          ) : (
+            // Render the chart once data is loaded
+            <DwChart data={data} selectedParticipants={selectedParticipants} />
+          )}
         </Grid>
+
       </Grid>
     </>
   );
