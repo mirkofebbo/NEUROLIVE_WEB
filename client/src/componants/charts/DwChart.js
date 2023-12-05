@@ -38,7 +38,8 @@ const DwChart = ({ data, selectedParticipants }) => {
         const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
         const MARGIN = { TOP: 20, RIGHT: 30, BOTTOM: 20, LEFT: 30 }
-        const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
+        // const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
+        const WIDTH = 720 - MARGIN.LEFT - MARGIN.RIGHT
 
         svg.attr('width', WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
@@ -76,6 +77,17 @@ const DwChart = ({ data, selectedParticipants }) => {
     return (
         <Card>
             <CardContent>
+                <div style={{ marginTop: '20px' }}>
+                    <iframe
+                        width="720"
+                        height="420"
+                        src="https://www.youtube.com/embed/L3snDjV3xQ4?si=A1X1PIyv8VsR8K5p" // Replace [YourVideoID] with your YouTube video ID
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                </div>
                 <Slider
                     value={YRange}
                     min={0}
@@ -95,7 +107,7 @@ const DwChart = ({ data, selectedParticipants }) => {
                     onChange={handleXChange}
                     valueLabelDisplay="auto"
                     aria-labelledby="range-slider"
-                    sx={{ width: `${width}px` }}
+                    sx={{ width: `${720}px` }}
                 />
             </CardContent>
         </Card>
