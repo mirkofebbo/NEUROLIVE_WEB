@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, Button, useMediaQuery, FormControl, Select, MenuItem } from '@mui/material';
+import { Typography, Grid, Button, useMediaQuery, FormControl, Select, MenuItem} from '@mui/material';
 import { csv } from 'd3';
 import DwChart from '../componants/charts/DwChart';
 import { useTheme } from '@mui/material/styles';
@@ -50,7 +50,7 @@ const DW = () => {
       <Typography variant="h4" gutterBottom>
         Detective Work
       </Typography>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} >
         {/* Responsive participant selection */}
         {isSmallScreen ? (
           <FormControl fullWidth>
@@ -68,7 +68,7 @@ const DW = () => {
             </Select>
           </FormControl>
         ) : (
-          <Grid item xs={12} md={4}>
+          <Grid item style={{width: "150px"}} md={2} >
             <Grid container spacing={1}>
               {allParticipants.map((participant, index) => (
                 <Grid item xs={6} key={participant}>
@@ -93,7 +93,6 @@ const DW = () => {
             </div>
           </Grid>
         )}
-
         {/* Chart column */}
         <Grid item xs={12} md={8}>
           <DwChart data={data} selectedParticipants={selectedParticipants} />

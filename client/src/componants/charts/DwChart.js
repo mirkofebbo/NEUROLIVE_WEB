@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/material';
-
+// import YoutubePlayer, {YoutubeIframeRef} from "react-native-youtube-iframe";
 const HEIGHT = 400;
-
+//https://www.npmjs.com/package/react-youtube
 
 const DwChart = ({ data, selectedParticipants }) => {
     const ref = useRef();
@@ -13,6 +13,7 @@ const DwChart = ({ data, selectedParticipants }) => {
     const [width, setWidth] = useState(window.innerWidth - 100);
     const [XRange, setXRange] = useState([min_Xdomain, max_Xdomain]);
     const [YRange, setYRange] = useState([0, 100]);
+
 
     const handleXChange = (event, newValue) => {
         setXRange(newValue);
@@ -37,9 +38,9 @@ const DwChart = ({ data, selectedParticipants }) => {
 
         const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-        const MARGIN = { TOP: 20, RIGHT: 30, BOTTOM: 20, LEFT: 30 }
+        const MARGIN = { TOP: 5, RIGHT: 0, BOTTOM: 5, LEFT: 30 }
         // const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
-        const WIDTH = 720 - MARGIN.LEFT - MARGIN.RIGHT
+        const WIDTH = 750 - MARGIN.LEFT - MARGIN.RIGHT
 
         svg.attr('width', WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
@@ -77,18 +78,18 @@ const DwChart = ({ data, selectedParticipants }) => {
     return (
         <Card>
             <CardContent>
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '20px', marginLeft: '60px'}}>
                     <iframe
+                        id = "movie_player"
                         width="720"
                         height="420"
                         src="https://www.youtube.com/embed/L3snDjV3xQ4?si=A1X1PIyv8VsR8K5p" // Replace [YourVideoID] with your YouTube video ID
                         title="YouTube video player"
-                        frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen
                     ></iframe>
                 </div>
-                <Slider
+                <Slider style={{marginBottom: '10px'}}
                     value={YRange}
                     min={0}
                     max={100}
@@ -96,11 +97,10 @@ const DwChart = ({ data, selectedParticipants }) => {
                     valueLabelDisplay="auto"
                     aria-labelledby="range-slider-y"
                     orientation="vertical"
-                    sx={{ height: `${HEIGHT}px` }}
+                    sx={{ height: `${HEIGHT-10}px` }}
                 />
-
                 <svg ref={ref}></svg>
-                <Slider
+                <Slider style={{marginLeft: '60px'}}
                     value={XRange}
                     min={min_Xdomain}
                     max={max_Xdomain}
