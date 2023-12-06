@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Grid, Button, useMediaQuery, FormControl, Select, MenuItem, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import DwChart from '../componants/charts/DwChart';
+import DwTimelineChart from '../componants/charts/DwTimelineChart';
 import DataLoader from '../componants/utils/DataLoader';
 
 const fetchData = async (day, type, setData) => {
@@ -20,10 +20,11 @@ const DW = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const fetchedData = await fetchData('ALL', 'breathing');
+      const fetchedData = await fetchData('ALL', 'luminance');
       setData(fetchedData);
       if (fetchedData.length > 0) {
-        const participants = Object.keys(fetchedData[0]).filter(key => key !== 'index');
+        const allowed = ['Dancer Acceleration Non-Windowed', 'Dancer Distance Non-Windowed', 'Sound Amplitude', 'Luminance Non-Windowed']
+        const participants = Object.keys(fetchedData[0]).filter(key => allowed.includes(key));
         setAllParticipants(participants);
         setSelectedParticipants(participants);
       }
@@ -81,16 +82,17 @@ const DW = () => {
           <Grid item style={{ width: "150px" }} md={2} >
             <Grid container spacing={1}>
               {allParticipants.map((participant, index) => (
-                <Grid item xs={6} key={participant}>
+                // <Grid item xs={6} key={participant}>
                   <Button
                     variant={isParticipantSelected(participant) ? "contained" : "outlined"}
                     color="primary"
                     onClick={() => handleParticipantButtonClick(participant)}
                     fullWidth
+                    style={{margin: "3px"}}
                   >
                     {participant}
                   </Button>
-                </Grid>
+                // </Grid>
               ))}
             </Grid>
             <div style={{ marginTop: '10px' }}>
@@ -112,7 +114,7 @@ const DW = () => {
             </div>
           ) : (
             // Render the chart once data is loaded
-            <DwChart data={data} selectedParticipants={selectedParticipants} />
+            <DwTimelineChart data={data} selectedParticipants={selectedParticipants} />
           )}
         </Grid>
 
