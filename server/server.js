@@ -5,7 +5,7 @@ const fs = require('fs');
 
 const app = express();  
 
-// Use Environment Variables for Sensitive Data
+// Use Environment Variables for Sensitive Data 
 const PORT = process.env.PORT || 5000;
 const ALLOWED_DOMAIN = process.env.ALLOWED_DOMAIN;
 const API_KEY = process.env.API_KEY;

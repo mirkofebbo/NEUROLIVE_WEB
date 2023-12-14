@@ -84,6 +84,7 @@ const DW = () => {
               {allParticipants.map((participant, index) => (
                 // <Grid item xs={6} key={participant}>
                   <Button
+                    key={`${participant}-${index}`}
                     variant={isParticipantSelected(participant) ? "contained" : "outlined"}
                     color="primary"
                     onClick={() => handleParticipantButtonClick(participant)}

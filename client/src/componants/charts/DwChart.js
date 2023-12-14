@@ -23,6 +23,11 @@ const DwChart = ({ data, selectedParticipants }) => {
     const opts = {
         height: '420',
         width: '720',
+        playerVars: {
+            autoplay :0,
+            origin: window.location.origin, 
+        },
+     
     };
     const onReady = (event) => {
         setPlayer(event.target);
