@@ -236,6 +236,7 @@ const Timeline = (props) => {
                     sx={{ width: `${width}px` }}
                     valueLabelFormat={value => secondsToTime(value)}
                 />
+
             </CardContent>
         </Card>
     );
