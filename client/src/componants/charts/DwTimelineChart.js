@@ -4,6 +4,7 @@ import { Card, CardContent, Tooltip, Select, Typography, Slider } from '@mui/mat
 import YouTube from 'react-youtube';
 
 const HEIGHT = 400;
+const offsetTime = 403;
 //https://www.npmjs.com/package/react-youtube
 
 const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDuration }) => {
@@ -48,12 +49,15 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
         const MARGIN = { TOP: 5, RIGHT: 0, BOTTOM: 20, LEFT: 30 }
         // const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
         const CHART_WIDTH = 750 - MARGIN.LEFT - MARGIN.RIGHT
+        const CHART_HEIGHT = HEIGHT - MARGIN.TOP - MARGIN.BOTTOM; 
 
         svg.attr('width', CHART_WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
 
-        const visibleData = data.slice(XRange[0], XRange[1] + 1);
+        const adjustedData = data.map(d => ({ ...d, index: d.index - offsetTime }));
 
+        const visibleData = adjustedData.slice(XRange[0], XRange[1] + 1);
+    
         const xScale = d3.scaleBand()
             .domain(visibleData.map(d => d.index))
             .range([0, CHART_WIDTH])
@@ -61,7 +65,15 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
 
         const yScale = d3.scaleLinear()
             .domain([YRange[0], YRange[1]])
-            .range([HEIGHT - MARGIN.BOTTOM, MARGIN.TOP]);
+            .range([CHART_HEIGHT, 0]);
+
+        const tickValues = visibleData
+            .filter((_, i) => i % Math.ceil(visibleData.length / 10) === 0)
+            .map(d => d.index);
+
+        const totalDataLength = data.length;
+        const visibleDataLength = XRange[1] - XRange[0] + 1;
+        const tickFrequency = Math.max(1, Math.floor(totalDataLength / visibleDataLength));
 
         // Yaxis 
         const chartGroup = svg.append('g').attr('transform', `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
@@ -69,14 +81,16 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
         chartGroup.append('g')
             .attr('transform', `translate(0, ${HEIGHT - MARGIN.BOTTOM})`)
             .call(d3.axisBottom(xScale)
-                .tickFormat(d => formatSecondsAsTime(d))  
-                .ticks(10)) 
+                .tickValues(tickValues)
+                .tickFormat(d => formatSecondsAsTime(d))
+            )
             .selectAll("text")
             .style("text-anchor", "end")
-            .attr("dx", "-.8em")
-            .attr("dy", ".15em")
-            .attr("transform", "rotate(-65)");
-
+            .attr("dx", "1.5rem")
+            // .attr("dy", ".15em")
+            // .attr("transform", "translate(25, 5)");
+            // .attr("transform", "rotate(-65)");
+            
         selectedParticipants.forEach((participant, idx) => {
             const createLine = d3.line()
                 .x(d => xScale(d.index))
@@ -95,21 +109,19 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
             .call(d3.axisLeft(yScale));
 
         const videoProgressRatio = videoCurrentTime / videoDuration;
-        const totalDataLength = data.length;
-        const visibleDataLength = XRange[1] - XRange[0] + 1;
         const videoDataIndex = Math.floor(videoProgressRatio * totalDataLength);
 
         if (videoDataIndex >= XRange[0] && videoDataIndex <= XRange[1]) {
-            const visibleDataIndex = videoDataIndex - XRange[0];
-            const linePosition = xScale(visibleData[visibleDataIndex].index);
+            // const visibleDataIndex = videoDataIndex - XRange[0];
+            const linePosition = xScale(visibleData[videoDataIndex].index);
 
-            chartGroup.selectAll(".video-time-line").remove(); // Remove existing line
+            chartGroup.selectAll(".video-time-line").remove(); 
             chartGroup.append("line")
                 .attr("class", "video-time-line")
                 .attr("x1", linePosition)
                 .attr("y1", 0)
                 .attr("x2", linePosition)
-                .attr("y2", HEIGHT)
+                .attr("y2", HEIGHT-  MARGIN.BOTTOM)
                 .attr("stroke", "white")
                 .attr("stroke-opacity", 0.5)
                 .attr("stroke-width", 5);
