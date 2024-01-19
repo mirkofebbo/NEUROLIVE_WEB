@@ -54,7 +54,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
         svg.attr('width', CHART_WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
 
-        const adjustedData = data.map(d => ({ ...d, index: d.index - offsetTime }));
+        const adjustedData = data.map(d => ({ ...d, index: d.index }));
 
         const visibleData = adjustedData.slice(XRange[0], XRange[1] + 1);
     
@@ -71,9 +71,6 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
             .filter((_, i) => i % Math.ceil(visibleData.length / 10) === 0)
             .map(d => d.index);
 
-        const totalDataLength = data.length;
-        const visibleDataLength = XRange[1] - XRange[0] + 1;
-        const tickFrequency = Math.max(1, Math.floor(totalDataLength / visibleDataLength));
 
         // Yaxis 
         const chartGroup = svg.append('g').attr('transform', `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
@@ -109,7 +106,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
             .call(d3.axisLeft(yScale));
 
         const videoProgressRatio = videoCurrentTime / videoDuration;
-        const videoDataIndex = Math.floor(videoProgressRatio * totalDataLength);
+        const videoDataIndex = Math.floor(videoProgressRatio *  data.length);
 
         if (videoDataIndex >= XRange[0] && videoDataIndex <= XRange[1]) {
             // const visibleDataIndex = videoDataIndex - XRange[0];
