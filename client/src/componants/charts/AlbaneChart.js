@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import html2canvas from 'html2canvas';
-import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/material';
+import { Card, CardContent} from '@mui/material';
 import jsonData from '../../data/demo.json'; // Replace with your actual import
 
 
-const albaneBlues = '#2f4bd0';
+// const albaneBlues = '#2f4bd0';
 const Chart = ({ day }) => {
     const ref = useRef();
     var solo_counter = 0;

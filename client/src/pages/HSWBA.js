@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Typography } from '@mui/material';
+import {Typography } from '@mui/material';
 import Timeline from '../componants/charts/TimelineChart';
 import SpotifyData from '../componants/spotify/SpotifyData';
 

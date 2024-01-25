@@ -19,11 +19,6 @@ const DW = () => {
   const [videoDuration, setVideoDuration] = useState(0);
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
 
-  // Video option
-  const opts = {
-    height: '410',
-    width: '720',
-  };
   const onReady = (event) => {
     setPlayer(event.target);
     setTimeout(() => {
@@ -40,7 +35,8 @@ const DW = () => {
     return () => clearInterval(interval);
   };
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const videoSize = isMobile ? { width: 450, height: 250 } : { width: 710, height: 400 };
 
   useEffect(() => {
     const loadData = async () => {
@@ -82,70 +78,161 @@ const DW = () => {
 
   return (
     <Box>
-      <Typography variant="h2" style={{ marginBottom: '20px' }}>
+      <Typography variant="h2" style={{ marginBottom: '10px' }}>
         Detective Work
       </Typography>
-      <Grid container spacing={3}>
-        {/* Responsive participant selection */}
-        {isSmallScreen ? (
-          <Grid item xs={12}>
-            <FormControl fullWidth variant="outlined">
-              <Select
-                multiple
-                value={selectedParticipants}
-                onChange={handleParticipantChange}
-                renderValue={(selected) => selected.join(', ')}
-              >
-                {allParticipants.map((participant) => (
-                  <MenuItem key={participant} value={participant}>
-                    {participant}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        ) : (
-          <Grid item md={2} sx={{ border: 1 }}>
-            <Grid container direction="column" >
-              {allParticipants.map((participant, index) => (
-                <Button
-                  key={`${participant}-${index}`}
-                  variant={isParticipantSelected(participant) ? "contained" : "outlined"}
-                  color="primary"
-                  onClick={() => handleParticipantButtonClick(participant)}
-                  sx={{ m: '0.5rem'}}
-                >
+      <div style={{ margin: 'auto', position: 'center', width: `${videoSize.width}px`, height: `${videoSize.height}px` }}>
+        <YouTube
+          videoId='L3snDjV3xQ4'
+          onReady={onReady}
+          onStateChange={onStateChange}
+          opts={{
+            width: videoSize.width,
+            height: videoSize.height,
+            playerVars: {
+              autoplay: 0,
+            },
+          }}
+        />
+      </div>
+      <Box m="auto" display="flex" justifyContent="center">
+        {isMobile ? (
+          <FormControl fullWidth variant="outlined">
+            <Select
+              multiple
+              value={selectedParticipants}
+              onChange={handleParticipantChange}
+              renderValue={(selected) => selected.join(', ')}
+            >
+              {allParticipants.map((participant) => (
+                <MenuItem key={participant} value={participant}>
                   {participant}
-                </Button>
+                </MenuItem>
               ))}
-              <Button variant="contained" color="primary" onClick={selectAll} sx={{ m: '0.5rem'}} >
-                Select All
+            </Select>
+            <Button variant="contained" color="primary" onClick={selectAll} sx={{ m: '0.1rem' }} >
+                  Select All
+                </Button>
+                <Button variant="contained" color="secondary" onClick={deselectAll} sx={{ m: '0.1rem' }} >
+                  Deselect All
+                </Button>
+          </FormControl>
+
+        ) : (
+          <div>
+            {allParticipants.map((participant, index) => (
+              <Button
+                key={`${participant}-${index}`}
+                variant={isParticipantSelected(participant) ? "contained" : "outlined"}
+                color="primary"
+                onClick={() => handleParticipantButtonClick(participant)}
+                sx={{ m: '0.1rem' }}
+              >
+                {participant}
               </Button>
-              <Button variant="contained" color="secondary" onClick={deselectAll} sx={{ m: '0.5rem'}} >
-                Deselect All
-              </Button>
-            </Grid>
-          </Grid>
+            ))}
+            <Button variant="contained" color="primary" onClick={selectAll} sx={{ m: '0.1rem' }} >
+              Select All
+            </Button>
+            <Button variant="contained" color="secondary" onClick={deselectAll} sx={{ m: '0.1rem' }} >
+              Deselect All
+            </Button>
+          </div>
         )}
 
-        {/* Chart column */}
-        <Grid item xs={12} md={10}>
-          {data.length === 0 ? (
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <CircularProgress />
-            </div>
-          ) : (
-            <div>
-              <div style={{ marginBottom: '20px' }}>
-                <YouTube videoId='L3snDjV3xQ4' opts={opts} onReady={onReady} onStateChange={onStateChange} />
-              </div>
-              <DwTimelineChart data={data} selectedParticipants={selectedParticipants} videoCurrentTime={videoCurrentTime} videoDuration={videoDuration} />
-            </div>
-          )}
-        </Grid>
-      </Grid>
+      </Box>
+      <DwTimelineChart
+        data={data}
+        selectedParticipants={selectedParticipants}
+        videoCurrentTime={videoCurrentTime}
+        videoDuration={videoDuration}
+      />
     </Box>
   );
 }
 
 export default DW;
+
+// return (
+//   <Box>
+//     <Typography variant="h2" style={{ marginBottom: '20px' }}>
+//       Detective Work
+//     </Typography>
+//     <Grid container spacing={3}>
+//       {/* Responsive participant selection */}
+//       {isSmallScreen ? (
+//         <Grid item xs={12}>
+// <FormControl fullWidth variant="outlined">
+//   <Select
+//     multiple
+//     value={selectedParticipants}
+//     onChange={handleParticipantChange}
+//     renderValue={(selected) => selected.join(', ')}
+//   >
+//     {allParticipants.map((participant) => (
+//       <MenuItem key={participant} value={participant}>
+//         {participant}
+//       </MenuItem>
+//     ))}
+//   </Select>
+// </FormControl>
+//         </Grid>
+//       ) : (
+//         <Grid item md={2} sx={{ border: 1 }}>
+//           <Grid container direction="column" >
+//             {allParticipants.map((participant, index) => (
+//               <Button
+//                 key={`${participant}-${index}`}
+//                 variant={isParticipantSelected(participant) ? "contained" : "outlined"}
+//                 color="primary"
+//                 onClick={() => handleParticipantButtonClick(participant)}
+//                 sx={{ m: '0.5rem' }}
+//               >
+//                 {participant}
+//               </Button>
+//             ))}
+//             <Button variant="contained" color="primary" onClick={selectAll} sx={{ m: '0.5rem' }} >
+//               Select All
+//             </Button>
+//             <Button variant="contained" color="secondary" onClick={deselectAll} sx={{ m: '0.5rem' }} >
+//               Deselect All
+//             </Button>
+//           </Grid>
+//         </Grid>
+//       )}
+
+//       {/* Chart column */}
+//       <Grid item xs={12} md={10} sx={{ border: 1 }}>
+//         {data.length === 0 ? (
+//           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+//             <CircularProgress />
+//           </div>
+//         ) : (
+//           <Box sx={{ border: 1}}>
+//             {/* <div style={{ position: 'relative', paddingTop: '56.25%', maxHeight: maxHeight, overflow: 'hidden' }}>
+//               <YouTube
+//                 videoId='L3snDjV3xQ4'
+//                 onReady={onReady}
+//                 onStateChange={onStateChange}
+//                 opts={{
+//                   width: '100%',
+//                   height: '100%',
+//                   playerVars: {
+//                     autoplay: 0,
+//                   },
+//                 }}
+//                 style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+//               />
+//             </div> */}
+//             <DwTimelineChart
+//               data={data}
+//               selectedParticipants={selectedParticipants}
+//               videoCurrentTime={videoCurrentTime}
+//               videoDuration={videoDuration}
+//             />
+//           </Box>
+//         )}
+//       </Grid>
+//     </Grid>
+//   </Box>
+// );

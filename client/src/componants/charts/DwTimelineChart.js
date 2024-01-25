@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { Card, CardContent, Tooltip, Select, Typography, Slider } from '@mui/material';
-import YouTube from 'react-youtube';
+import { Card, CardContent,  Slider } from '@mui/material';
 
-const HEIGHT = 400;
-const offsetTime = 403;
+const HEIGHT = 300;
 //https://www.npmjs.com/package/react-youtube
 
 const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDuration }) => {
@@ -13,9 +11,15 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
     const max_Xdomain = data.length - 1;
     const min_Ydomain = -10;
     const max_Ydomain = 10
-    const [width, setWidth] = useState(window.innerWidth - 100);
+    const [width, setWidth] = useState(window.innerWidth- 80);
     const [XRange, setXRange] = useState([min_Xdomain, max_Xdomain]);
     const [YRange, setYRange] = useState([min_Ydomain, max_Ydomain]);
+
+    const MARGIN = { TOP: 5, RIGHT: 0, BOTTOM: 10, LEFT: 25}
+    // const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
+    let CHART_WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
+    const CHART_HEIGHT = HEIGHT - MARGIN.TOP - MARGIN.BOTTOM; 
+    
     // function to conver into tim
     const formatSecondsAsTime = (seconds) => {
         const date = new Date(0);
@@ -28,7 +32,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
     };
 
     const handleResize = () => {
-        setWidth(window.innerWidth - 100);
+        setWidth(window.innerWidth - 80);
     };
 
     useEffect(() => {
@@ -45,11 +49,9 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
         svg.selectAll('*').remove(); // reset chart on change
 
         const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+        let CHART_WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
 
-        const MARGIN = { TOP: 5, RIGHT: 0, BOTTOM: 20, LEFT: 30 }
-        // const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
-        const CHART_WIDTH = 750 - MARGIN.LEFT - MARGIN.RIGHT
-        const CHART_HEIGHT = HEIGHT - MARGIN.TOP - MARGIN.BOTTOM; 
+
 
         svg.attr('width', CHART_WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
@@ -128,7 +130,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
     return (
         <Card>
             <CardContent>
-                <Slider style={{ marginBottom: '10px' }}
+                <Slider style={{ marginBottom: '20px' }}
                     value={YRange}
                     min={min_Ydomain}
                     max={max_Ydomain}
@@ -136,17 +138,17 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
                     valueLabelDisplay="auto"
                     aria-labelledby="range-slider-y"
                     orientation="vertical"
-                    sx={{ height: `${HEIGHT - 10}px` }}
+                    sx={{ height: `${HEIGHT -10}px` }}
                 />
                 <svg ref={ref}></svg>
-                <Slider style={{ marginLeft: '60px' }}
+                <Slider style={{ marginLeft: '30px' }}
                     value={XRange}
                     min={min_Xdomain}
                     max={max_Xdomain}
                     onChange={handleXChange}
                     valueLabelDisplay="auto"
                     aria-labelledby="range-slider"
-                    sx={{ width: `${720}px` }}
+                    sx={{ width: `${width}px` }}
                 />
             </CardContent>
         </Card>
