@@ -82,71 +82,66 @@ const DW = () => {
 
   return (
     <Box>
-      <Typography variant="h2">
+      <Typography variant="h2" style={{ marginBottom: '20px' }}>
         Detective Work
       </Typography>
-      <Grid container spacing={2} >
+      <Grid container spacing={3}>
         {/* Responsive participant selection */}
         {isSmallScreen ? (
-          <FormControl fullWidth>
-            <Select
-              multiple
-              value={selectedParticipants}
-              onChange={handleParticipantChange}
-              renderValue={(selected) => selected.join(', ')}
-            >
-              {allParticipants.map((participant) => (
-                <MenuItem key={participant} value={participant}>
-                  {participant}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <Grid item xs={12}>
+            <FormControl fullWidth variant="outlined">
+              <Select
+                multiple
+                value={selectedParticipants}
+                onChange={handleParticipantChange}
+                renderValue={(selected) => selected.join(', ')}
+              >
+                {allParticipants.map((participant) => (
+                  <MenuItem key={participant} value={participant}>
+                    {participant}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
         ) : (
-          <Grid item style={{ width: "150px" }} md={2} >
-            <Grid container spacing={1}>
+          <Grid item md={2} sx={{ border: 1 }}>
+            <Grid container direction="column" >
               {allParticipants.map((participant, index) => (
-                // <Grid item xs={6} key={participant}>
                 <Button
                   key={`${participant}-${index}`}
                   variant={isParticipantSelected(participant) ? "contained" : "outlined"}
                   color="primary"
                   onClick={() => handleParticipantButtonClick(participant)}
-                  fullWidth
-                  style={{ marginTop: "3px" }}
+                  sx={{ m: '0.5rem'}}
                 >
                   {participant}
                 </Button>
-                // </Grid>
               ))}
-              <Button variant="contained" color="primary" onClick={selectAll} style={{ marginTop: '10px' }} fullWidth>
+              <Button variant="contained" color="primary" onClick={selectAll} sx={{ m: '0.5rem'}} >
                 Select All
               </Button>
-              <Button variant="contained" color="secondary" onClick={deselectAll} style={{ marginTop: '10px' }} fullWidth>
+              <Button variant="contained" color="secondary" onClick={deselectAll} sx={{ m: '0.5rem'}} >
                 Deselect All
               </Button>
             </Grid>
           </Grid>
         )}
+
         {/* Chart column */}
         <Grid item xs={12} md={10}>
           {data.length === 0 ? (
-            // Render loading animation when data is not loaded
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
               <CircularProgress />
             </div>
           ) : (
-            // Render the chart once data is loaded
             <div>
-              <div style={{ marginTop: '20px', marginLeft: '60px' }}>
+              <div style={{ marginBottom: '20px' }}>
                 <YouTube videoId='L3snDjV3xQ4' opts={opts} onReady={onReady} onStateChange={onStateChange} />
               </div>
               <DwTimelineChart data={data} selectedParticipants={selectedParticipants} videoCurrentTime={videoCurrentTime} videoDuration={videoDuration} />
             </div>
           )}
-        </Grid>
-        <Grid item xs={5} md={5}>
-
         </Grid>
       </Grid>
     </Box>
