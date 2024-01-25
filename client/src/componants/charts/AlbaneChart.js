@@ -103,11 +103,11 @@ const Chart = ({ day }) => {
             .y(d => y(d.count));
 
         // Calculate participant count over time
-        const times = Array.from(new Set([...participants.map(p => p.start), ...participants.map(p => p.stop)])).sort((a, b) => a - b);
-        const counts = times.map(time => ({
-            time: time,
-            count: participants.filter(p => p.start <= time && p.stop >= time).length
-        }));
+        // const times = Array.from(new Set([...participants.map(p => p.start), ...participants.map(p => p.stop)])).sort((a, b) => a - b);
+        // const counts = times.map(time => ({
+        //     time: time,
+        //     count: participants.filter(p => p.start <= time && p.stop >= time).length
+        // }));
 
         // Color scale for solos
         const colorScale = d3.scaleOrdinal(d3.schemeTableau10);
@@ -152,7 +152,7 @@ const Chart = ({ day }) => {
                 .attr('text-anchor', 'middle')
                 .attr('transform', `rotate(-90 ${(x(solo.start) + x(solo.stop)) / 2},${HEIGHT / 2})`)
                 // .text(`S${off_set + idx + 1}`)
-                .text(solo.id != "GROUP" ? `S${solo_counter += 1}` : 'GROUP')
+                .text(solo.id !== "GROUP" ? `S${solo_counter += 1}` : 'GROUP')
                 .attr('fill', 'black')
                 // .attr('fill', '#F1DABF')
                 .attr('font-weight', 'bold');

@@ -5,7 +5,6 @@ import jsonData from '../../data/demo.json'; // Replace with your actual import
 import { schemePastel2 } from 'd3-scale-chromatic';
 
 
-const days = ['SAT', 'SUN'];
 const Timeline = (props) => {
     const ref = useRef();
 
