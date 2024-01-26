@@ -78,7 +78,7 @@ const DW = () => {
 
   return (
     <Box>
-      <Typography variant="h2" style={{ marginBottom: '10px' }}>
+      <Typography variant="h2" style={{ marginBottom: '10px'}}>
         Detective Work
       </Typography>
       <div style={{ margin: 'auto', position: 'center', width: `${videoSize.width}px`, height: `${videoSize.height}px` }}>
