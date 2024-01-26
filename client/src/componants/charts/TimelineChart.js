@@ -9,7 +9,6 @@ const Timeline = (props) => {
     const ref = useRef();
 
     const [selectedDay, setSelectedDay] = useState('SAT');
-    const [selectedSong, setSelectedSong] = useState(null);
 
     const secondsToTime = (seconds) => {
         const hours = Math.floor(seconds / 3600);
@@ -23,12 +22,13 @@ const Timeline = (props) => {
         return hours * 3600 + minutes * 60 + seconds;
     };
 
+
     var min_domain = timeToSeconds(jsonData[selectedDay].message_times[0]);
     var max_domain = timeToSeconds(jsonData[selectedDay].message_times[jsonData[selectedDay].message_times.length - 1]);
     const [value, setValue] = useState([min_domain, max_domain]);
     const [width, setWidth] = useState(window.innerWidth - 100); // Initial width
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (newValue) => {
         setValue(newValue);
     };
 
@@ -76,6 +76,7 @@ const Timeline = (props) => {
         });
         return data;
     };
+
     const songs = Object.values(jsonData[selectedDay].songs).map(song => ({
         ...song,
         type: 'song',
@@ -97,6 +98,16 @@ const Timeline = (props) => {
         stop: timeToSeconds(solo.stop)
     }));
 
+    // Get solo and songs for the selected participant
+    const getOverlappingEvents = (participantStart, participantStop) => {
+        const overlappingSongs = songs.filter(song => 
+            isOverlapping({start: participantStart, stop: participantStop}, song)    
+        );
+        const overlappingSolos = solos.filter(solo => 
+            isOverlapping({start: participantStart, stop: participantStop}, solo)            
+        );
+        return {overlappingSongs, overlappingSolos};
+    }
     const combinedData = [...songs, ...solos, ...participants];
     const dataWithLanes = allocateLanes(combinedData);
 
@@ -186,8 +197,11 @@ const Timeline = (props) => {
                     .style("opacity", 0);
             })
             .on("click", (event, d) => {
+
+                if (d.type == 'solo'){
+                    props.onSoloSelect && props.onSoloSelect(d);
+                }
                 if (d.type === 'song') {
-                    setSelectedSong(d);
                     props.onSongSelect && props.onSongSelect(d); // Call the prop here
                 }
                 if (d.type === 'participant') {
@@ -210,6 +224,11 @@ const Timeline = (props) => {
                         .attr('y2', HEIGHT)
                         .attr('stroke', 'red')
                         .attr('stroke-width', 1));
+                    
+                    const { overlappingSongs, overlappingSolos} = getOverlappingEvents(d.start, d.stop);
+                    const overlapingData = {songs: overlappingSongs, solos: overlappingSolos};
+
+                    props.onParticipantSelect && props.onParticipantSelect(overlapingData);
                 }
             });
 

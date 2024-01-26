@@ -37,11 +37,13 @@ const Chart = ({ day }) => {
     }));
 
     const solos = Object.values(jsonData[day].solo)
+
         .map(solo => {
             let soloId = solo.id;
             if (soloId.includes("group_")) {
                 soloId = "GROUP";
             }
+   
             return {
                 ...solo,
                 id: soloId,
@@ -51,7 +53,6 @@ const Chart = ({ day }) => {
             };
         })
         .sort((a, b) => a.start - b.start);
-
 
     useEffect(() => {
         const svg = d3.select(ref.current);

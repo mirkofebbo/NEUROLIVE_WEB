@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, Button, useMediaQuery, FormControl, Select, MenuItem, CircularProgress, Box } from '@mui/material';
+import { Typography, Button, useMediaQuery, FormControl, Select, MenuItem, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DwTimelineChart from '../componants/charts/DwTimelineChart';
 import DataLoader from '../componants/utils/DataLoader';
@@ -12,6 +12,7 @@ const fetchData = async (day, type, setData) => {
 };
 
 const DW = () => {
+  
   const [data, setData] = useState([]);
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [allParticipants, setAllParticipants] = useState([]);
@@ -25,6 +26,7 @@ const DW = () => {
       setVideoDuration(event.target.getDuration());
     }, 1000);
   };
+
   const onStateChange = () => {
     // Update video time every second
     const interval = setInterval(() => {
@@ -34,6 +36,7 @@ const DW = () => {
     }, 1000);
     return () => clearInterval(interval);
   };
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const videoSize = isMobile ? { width: 450, height: 250 } : { width: 710, height: 400 };

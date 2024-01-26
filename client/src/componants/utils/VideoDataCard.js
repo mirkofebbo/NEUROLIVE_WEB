@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, Box, Slider, IconButton } from '@mui/material';
-import * as d3 from 'd3';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
 import MotionChart from '../charts/MotionChart';
 import BlinkChart from '../charts/BlinkingChart';
-import EEGChart from '../charts/EEGChart';
+// import EEGChart from '../charts/EEGChart';
 
 const VideoCard = () => {
     const [sliderValue, setSliderValue] = useState(0);
