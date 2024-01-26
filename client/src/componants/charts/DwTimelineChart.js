@@ -6,6 +6,13 @@ const HEIGHT = 300;
 //https://www.npmjs.com/package/react-youtube
 
 const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDuration }) => {
+    let color_scheme = { 
+        'Luminance Non-Windowed': '#FFA500',
+        'Sound Amplitude': '#FC2E20',
+        'Dancer Acceleration Non-Windowed': '#82A4E3',
+        'Dancer Distance Non-Windowed': '#0000FF',
+    }
+
     const ref = useRef();
     const min_Xdomain = 0;
     const max_Xdomain = data.length - 1;
@@ -48,16 +55,13 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
         const svg = d3.select(ref.current);
         svg.selectAll('*').remove(); // reset chart on change
 
-        const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-        let CHART_WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
-
-
+        CHART_WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
 
         svg.attr('width', CHART_WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
-
+        
         const adjustedData = data.map(d => ({ ...d, index: d.index }));
-
+        console.log(adjustedData)
         const visibleData = adjustedData.slice(XRange[0], XRange[1] + 1);
     
         const xScale = d3.scaleBand()
@@ -73,9 +77,9 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
             .filter((_, i) => i % Math.ceil(visibleData.length / 10) === 0)
             .map(d => d.index);
 
-
         // Yaxis 
         const chartGroup = svg.append('g').attr('transform', `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
+        
         // X axis
         chartGroup.append('g')
             .attr('transform', `translate(0, ${HEIGHT - MARGIN.BOTTOM})`)
@@ -90,7 +94,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
             // .attr("transform", "translate(25, 5)");
             // .attr("transform", "rotate(-65)");
             
-        selectedParticipants.forEach((participant, idx) => {
+        selectedParticipants.forEach((participant) => {
             const createLine = d3.line()
                 .x(d => xScale(d.index))
                 .y(d => yScale(d[participant]));
@@ -98,7 +102,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
             chartGroup.append("path")
                 .datum(visibleData)
                 .attr("fill", "none")
-                .attr("stroke", colorScale(idx))
+                .attr("stroke", color_scheme[participant] || '#000')
                 .attr("stroke-opacity", 0.8)
                 .attr("stroke-width", 1.5)
                 .attr("d", createLine);
@@ -111,20 +115,25 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
         const videoDataIndex = Math.floor(videoProgressRatio *  data.length);
 
         if (videoDataIndex >= XRange[0] && videoDataIndex <= XRange[1]) {
-            // const visibleDataIndex = videoDataIndex - XRange[0];
-            const linePosition = xScale(visibleData[videoDataIndex].index);
+            const adjustedVideoDataIndex = videoDataIndex - XRange[0];
 
-            chartGroup.selectAll(".video-time-line").remove(); 
-            chartGroup.append("line")
-                .attr("class", "video-time-line")
-                .attr("x1", linePosition)
-                .attr("y1", 0)
-                .attr("x2", linePosition)
-                .attr("y2", HEIGHT-  MARGIN.BOTTOM)
-                .attr("stroke", "white")
-                .attr("stroke-opacity", 0.5)
-                .attr("stroke-width", 5);
+            // Check if adjustedVideoDataIndex is within the bounds of visibleData
+            if (adjustedVideoDataIndex >= 0 && adjustedVideoDataIndex < visibleData.length) {
+                const linePosition = xScale(visibleData[adjustedVideoDataIndex].index);
+
+                chartGroup.selectAll(".video-time-line").remove(); 
+                chartGroup.append("line")
+                    .attr("class", "video-time-line")
+                    .attr("x1", linePosition)
+                    .attr("y1", 0)
+                    .attr("x2", linePosition)
+                    .attr("y2", HEIGHT - MARGIN.BOTTOM)
+                    .attr("stroke", "white")
+                    .attr("stroke-opacity", 0.5)
+                    .attr("stroke-width", 5);
+            }
         }
+
     }, [data, selectedParticipants, width, videoCurrentTime, XRange, YRange]);
 
     return (

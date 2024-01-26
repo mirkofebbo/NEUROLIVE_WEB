@@ -139,7 +139,6 @@ const DW = () => {
             </Button>
           </div>
         )}
-
       </Box>
       <DwTimelineChart
         data={data}
