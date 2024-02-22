@@ -23,8 +23,8 @@ const Timeline = (props) => {
     };
 
 
-    var min_domain = timeToSeconds(jsonData[selectedDay].message_times[0]);
-    var max_domain = timeToSeconds(jsonData[selectedDay].message_times[jsonData[selectedDay].message_times.length - 1]);
+    var min_domain = timeToSeconds("11:00:00:00");
+    var max_domain = timeToSeconds("19:00:00:00");
     const [value, setValue] = useState([min_domain, max_domain]);
     const [width, setWidth] = useState(window.innerWidth - 100); // Initial width
 
@@ -119,7 +119,6 @@ const Timeline = (props) => {
 
         d3.select(ref.current).selectAll('*').remove();
 
-
         const MARGIN = { TOP: 20, RIGHT: 0, BOTTOM: 20, LEFT: 10 }
         const WIDTH = width - MARGIN.LEFT - MARGIN.RIGHT
         const HEIGHT = 220; // Fixed HEIGHT since all songs are on the same row
@@ -184,6 +183,10 @@ const Timeline = (props) => {
                     .style("opacity", .9);
                 if (d.type === 'song') {
                     tooltip.html(`${d.name} <br> by: ${d.artist}`);
+                }
+                else if (d.type === 'solo') {
+                    console.log(d);
+                    tooltip.html(`${d.id} <br> rating: ${d.ratings}`);
                 } else {
                     tooltip.html(d.id);
                 }
@@ -254,7 +257,6 @@ const Timeline = (props) => {
                     sx={{ width: `${width}px` }}
                     valueLabelFormat={value => secondsToTime(value)}
                 />
-
             </CardContent>
         </Card>
     );

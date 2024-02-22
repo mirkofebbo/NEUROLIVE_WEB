@@ -31,7 +31,7 @@ function HSWBA() {
         {/* </Grid> */}
         {/* <Grid item xs={12} lg={4} xl={3}> */}
           <SpotifyData song={selectedSong} />
-          <SoloCard solo={selectedSolo}/>
+          {/* <SoloCard solo={selectedSolo}/> */}
           <ParticipantCard overlappingData={selectedParticipant}/>
         {/* </Grid> */}
       {/* </Grid> */}
