@@ -7,7 +7,7 @@ function Test() {
   return (
     <>
     <Typography>TEST</Typography>
-    <HorizontalTree> </HorizontalTree>
+    <HorizontalTree participantId={"A1"}> </HorizontalTree>
     </>
   );
 }

@@ -1,48 +1,37 @@
-/**
- * Transforms the provided data into a hierarchical format for D3's tree layout.
- * 
- * @param {Object} participantData - The selected participant data.
- * @param {Object} allSolos - All solos data.
- * @param {Object} allSongs - All songs data.
- * @returns {Object} Hierarchical data suitable for a D3 tree.
- */
-function transformDataForTree(participantData, allSolos, allSongs) {
-    // Starting with the selected participant as the root
-    const treeData = {
-        name: participantData.id,
-        children: []
-    };
+import jsonData from '../../data/demo.json';
 
-    // Iterate over solos to find those witnessed by the participant
-    Object.values(allSolos).forEach(solo => {
-        const soloStartTime = new Date('1970/01/01 ' + solo.start).getTime();
-        const soloStopTime = new Date('1970/01/01 ' + solo.stop).getTime();
-        const participantInTime = new Date('1970/01/01 ' + participantData.in).getTime();
-        const participantOutTime = new Date('1970/01/01 ' + participantData.out).getTime();
+const transformToHierarchy = () => {
+    console.log(jsonData["SUN"])
+    // Extract participants, solos, and songs
 
-        // Check if the participant witnessed this solo
-        if (soloStartTime >= participantInTime && soloStopTime <= participantOutTime) {
-            const soloNode = {
-                name: solo.id,
-                children: []
-            };
+    // const { participants, solo, songs } = data;
 
-            // Iterate over songs to find those related to this solo
-            Object.values(allSongs).forEach(song => {
-                const songStartTime = new Date('1970/01/01 ' + song.start).getTime();
-                const songStopTime = new Date('1970/01/01 ' + song.stop).getTime();
+    // // Transform each participant into a hierarchical node
+    // const participantsHierarchy = Object.entries(participants).map(([id, participant]) => {
+    //     // Find solos and songs that fall within the participant's timeline
+    //     const participantSolos = Object.values(solo).filter(s => 
+    //         s.start >= participant.in && s.stop <= participant.out
+    //     );
+        
+    //     const participantSongs = Object.values(songs).filter(song => 
+    //         song.start >= participant.in && song.stop <= participant.out
+    //     );
 
-                // Check if the song is related to the solo
-                if (songStartTime >= soloStartTime && songStopTime <= soloStopTime) {
-                    soloNode.children.push({
-                        name: `${song.name} by ${song.artist}`
-                    });
-                }
-            });
+    //     // Combine solos and songs under this participant
+    //     const children = [...participantSolos, ...participantSongs].map(item => ({
+    //         ...item,
+    //         children: [] // Placeholder for potential further nesting
+    //     }));
 
-            treeData.children.push(soloNode);
-        }
-    });
+    //     return {
+    //         ...participant,
+    //         id,
+    //         children
+    //     };
+    // });
 
-    return treeData;
-}
+    // For simplicity, this example assumes a single participant is selected
+    // You would need to adjust this to dynamically select a participant based on user interaction
+    // return participantsHierarchy[0]; // Returning the first participant for demonstration
+    return "Yes"
+};

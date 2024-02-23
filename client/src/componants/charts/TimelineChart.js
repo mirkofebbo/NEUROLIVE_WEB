@@ -11,27 +11,34 @@ const Timeline = (props) => {
     const [selectedDay, setSelectedDay] = useState('SAT');
 
     const secondsToTime = (seconds) => {
+        if (isNaN(seconds)) {
+            console.error('Invalid input to secondsToTime:', seconds);
+            return "00:00:00"; // Return a default or indicate an error as appropriate
+        }
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    };
+    };    
 
     const timeToSeconds = (time) => {
         const [hours, minutes, seconds] = time.split(':').map(Number);
         return hours * 3600 + minutes * 60 + seconds;
     };
 
-
-    var min_domain = timeToSeconds("11:00:00:00");
-    var max_domain = timeToSeconds("19:00:00:00");
+    var min_domain = timeToSeconds("11:00:00");
+    var max_domain = timeToSeconds("19:00:00");
     const [value, setValue] = useState([min_domain, max_domain]);
     const [width, setWidth] = useState(window.innerWidth - 100); // Initial width
 
-    const handleChange = (newValue) => {
-        setValue(newValue);
+    const handleChange = (event, newValue) => {
+        if (Array.isArray(newValue)) {
+            setValue(newValue.map(v => Math.max(min_domain, Math.min(v, max_domain)))); // Clamp values to domain
+        } else {
+            setValue([Math.max(min_domain, Math.min(newValue, max_domain))]); // For single value sliders, adjust as necessary
+        }
     };
-
+    
     const handleResize = () => {
         setWidth(window.innerWidth - 100);
     };
@@ -202,7 +209,7 @@ const Timeline = (props) => {
             .on("click", (event, d) => {
 
                 if (d.type == 'solo'){
-                    props.onSoloSelect && props.onSoloSelect(d);
+                    props.onSoloSelect && props.onSoloSelect({type: d.type, id: d.id});
                 }
                 if (d.type === 'song') {
                     props.onSongSelect && props.onSongSelect(d); // Call the prop here
@@ -228,10 +235,10 @@ const Timeline = (props) => {
                         .attr('stroke', 'red')
                         .attr('stroke-width', 1));
                     
-                    const { overlappingSongs, overlappingSolos} = getOverlappingEvents(d.start, d.stop);
-                    const overlapingData = {songs: overlappingSongs, solos: overlappingSolos};
-
-                    props.onParticipantSelect && props.onParticipantSelect(overlapingData);
+                    // const { overlappingSongs, overlappingSolos} = getOverlappingEvents(d.start, d.stop);
+                    // const overlapingData = {songs: overlappingSongs, solos: overlappingSolos};
+                    const participantData = {type: d.type, id: d.id};
+                    props.onParticipantSelect && props.onParticipantSelect(participantData);
                 }
             });
 
