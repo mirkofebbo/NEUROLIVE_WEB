@@ -4,41 +4,63 @@ import { hierarchy, tree } from 'd3-hierarchy';
 import jsonData from '../../data/demo.json';
 
 const HorizontalTree = ({ props }) => {
+    console.log(props)
     const svgRef = useRef();
-    const [selectedParticipant, setSelectedParticipant] = useState(null);
+    const [propsParticipant, setSelectedParticipant] = useState(null);
 
 
     useEffect(() => {
         if (!props || !jsonData["SAT"]) return;
         const { type, id } = props;
-        let hierarchy = [];
 
         const data = jsonData["SAT"]
         const participantsData = data.participants[props.id];
         if (!participantsData) return;
 
-        if (type == "participant"){
-            const solosData = Object.values(data.solo).filter(solo => 
-                solo.start >= participantsData.in && solo.stop <= participantsData.out
+
+        let hierarchy;
+        if (type === "participant") {
+            const participant = data.participants[props.id];
+            const solos = Object.values(data.solo).filter(solo =>
+                solo.start >= participant.in && solo.stop <= participant.out
             );
-    
-            const songsData = Object.values(data.songs).filter(song =>
-                solosData.some(solo => song.start >= solo.start && song.stop <= solo.stop)
+            const songs = solos.flatMap(solo =>
+                Object.values(data.songs).filter(song =>
+                    song.start >= solo.start && song.stop <= solo.stop
+                )
             );
-    
             hierarchy = {
-                name: participantsData.id,
-                children: solosData.map(solo => ({
+                name: participant.id,
+                children: solos.map(solo => ({
                     name: solo.id,
-                    children: songsData.filter(song => song.start >= solo.start && song.stop <= solo.stop).map(song => ({
-                        name: song.name,
-                        artist: song.artist
-                    }))
+                    children: songs.filter(song => song.start >= solo.start && song.stop <= solo.stop)
                 }))
-            }
+            };
+        } else if (type === "solo") {
+            const solo = data.solo[props.id];
+
+            const participantIds = Object.keys(data.participants).filter(pid => {
+                const p = data.participants[pid];
+                return solo.start >= p.in && solo.stop <= p.out;
+            });
+            const participants = participantIds.map(pid => data.participants[pid]);
+            const songs = Object.values(data.songs).filter(song =>
+                song.start >= solo.start && song.stop <= solo.stop
+            );
+            hierarchy = {
+                name: solo.id,
+                children: [
+                    {
+                        name: "Participants",
+                        children: participants.map(p => ({ name: p.id }))
+                    },
+                    {
+                        name: "Songs",
+                        children: songs
+                    }
+                ]
+            };
         }
-
-
 
         const root = d3.hierarchy(hierarchy);
         console.log(root)
@@ -57,9 +79,9 @@ const HorizontalTree = ({ props }) => {
 
         const treeLayout = d3.tree().size([height, width]);
         treeLayout(root);
-        
+
         // d3.select(svgRef.current).selectAll("*").remove();
-       // Add links
+        // Add links
         svg.selectAll(".link")
             .data(root.links())
             .enter().append("path")
