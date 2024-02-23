@@ -1,13 +1,13 @@
 import React from 'react';
 import {Typography } from '@mui/material';
-// import VideoCard from '../componants/utils/VideoDataCard';
+import HorizontalTree from '../componants/charts/TreeChart';
 
 function Test() {
 
   return (
     <>
     <Typography>TEST</Typography>
-    {/* <VideoCard> </VideoCard> */}
+    <HorizontalTree> </HorizontalTree>
     </>
   );
 }

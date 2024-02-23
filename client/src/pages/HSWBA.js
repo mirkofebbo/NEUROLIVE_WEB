@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Typography } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import Timeline from '../componants/charts/TimelineChart';
 import SpotifyData from '../componants/spotify/SpotifyData';
 import SoloCard from '../componants/utils/SoloCard'
@@ -25,16 +25,19 @@ function HSWBA() {
   return (
     <>
       <Typography variant="h3">How Shall We Begin Again</Typography>
-      {/* <Grid container spacing={1}>
-        <Grid item xs={12} lg={8} xl={9}> */}
-          <Timeline onSongSelect={handleSongSelect} onSoloSelect={handleSongSolo} onParticipantSelect={handleSelectedParticipant}/>
+      <Grid container spacing={1}>
+        {/* <Grid item xs={12} lg={8} xl={9}> */}
+        <Timeline onSongSelect={handleSongSelect} onSoloSelect={handleSongSolo} onParticipantSelect={handleSelectedParticipant} />
         {/* </Grid> */}
-        {/* <Grid item xs={12} lg={4} xl={3}> */}
+        <Grid item xs={12} lg={4} xl={3}>
+          <ParticipantCard overlappingData={selectedParticipant} />
+        </Grid>
+        <Grid item xs={12} lg={4} xl={3}>
           <SpotifyData song={selectedSong} />
           {/* <SoloCard solo={selectedSolo}/> */}
-          <ParticipantCard overlappingData={selectedParticipant}/>
-        {/* </Grid> */}
-      {/* </Grid> */}
+        </Grid>
+
+      </Grid>
     </>
   );
 }

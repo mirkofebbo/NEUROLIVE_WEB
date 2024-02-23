@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/material';
 import jsonData from '../../data/demo.json'; // Replace with your actual import
-import { schemePastel2 } from 'd3-scale-chromatic';
+import { schemeTableau10 } from 'd3-scale-chromatic';
 
 
 const Timeline = (props) => {
@@ -113,9 +113,9 @@ const Timeline = (props) => {
 
     useEffect(() => {
         // Clear the chart container
-        const songColor = schemePastel2[0];
-        const eegColor = schemePastel2[1];
-        const soloColor = schemePastel2[3];
+        const songColor = schemeTableau10[3];
+        const eegColor = schemeTableau10[9];
+        const soloColor = schemeTableau10[1];
 
         d3.select(ref.current).selectAll('*').remove();
 

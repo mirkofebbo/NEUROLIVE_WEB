@@ -27,7 +27,7 @@ const LineChart = ({ data, width = 400, height = 200 }) => {
     svg.append('path')
       .datum(data)
       .attr('fill', 'none')
-      .attr('stroke', 'black')
+      .attr('stroke', '#FA824C')
       .attr('stroke-width', 2)
       .attr('d', line);
 

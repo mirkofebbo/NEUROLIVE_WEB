@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import html2canvas from 'html2canvas';
 import { Card, CardContent} from '@mui/material';
-import jsonData from '../../data/demo.json'; // Replace with your actual import
-
+import jsonData from '../../data/demo.json';
 
 // const albaneBlues = '#2f4bd0';
 const Chart = ({ day }) => {
@@ -92,7 +91,7 @@ const Chart = ({ day }) => {
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
 
         const x = d3.scaleLinear()
-            .domain([timeToSeconds(jsonData[day].message_times[0]), timeToSeconds(jsonData[day].message_times[jsonData[day].message_times.length - 1])])
+            .domain([timeToSeconds("11:00:00:00"), timeToSeconds("19:00:00:00")])
             .range([MARGIN.LEFT, WIDTH + MARGIN.LEFT]);
 
         const y = d3.scaleLinear()
