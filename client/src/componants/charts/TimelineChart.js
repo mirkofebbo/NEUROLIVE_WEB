@@ -44,6 +44,7 @@ const Timeline = (props) => {
     };
     const handleDayChange = (event) => {
         setSelectedDay(event.target.value);
+        props.onDayChange(event.target.value);
     };
 
     useEffect(() => {
@@ -94,8 +95,8 @@ const Timeline = (props) => {
     const participants = Object.values(jsonData[selectedDay].participants).map(participant => ({
         ...participant,
         type: 'participant',
-        start: timeToSeconds(participant.in),
-        stop: timeToSeconds(participant.out)
+        start: timeToSeconds(participant.start),
+        stop: timeToSeconds(participant.stop)
     }));
 
     const solos = Object.values(jsonData[selectedDay].solo).map(solo => ({
@@ -192,10 +193,9 @@ const Timeline = (props) => {
                     tooltip.html(`${d.name} <br> by: ${d.artist}`);
                 }
                 else if (d.type === 'solo') {
-                    console.log(d);
-                    tooltip.html(`${d.id} <br> rating: ${d.ratings}`);
+                    tooltip.html(`${d.name} <br> rating: ${d.ratings}`);
                 } else {
-                    tooltip.html(d.id);
+                    tooltip.html(d.name);
                 }
                 tooltip.style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
@@ -209,7 +209,7 @@ const Timeline = (props) => {
             .on("click", (event, d) => {
 
                 if (d.type == 'solo'){
-                    props.onSoloSelect && props.onSoloSelect({type: d.type, id: d.id});
+                    props.onSoloSelect && props.onSoloSelect({type: d.type, id: d.name});
                 }
                 if (d.type === 'song') {
                     props.onSongSelect && props.onSongSelect(d); // Call the prop here
@@ -237,7 +237,7 @@ const Timeline = (props) => {
                     
                     // const { overlappingSongs, overlappingSolos} = getOverlappingEvents(d.start, d.stop);
                     // const overlapingData = {songs: overlappingSongs, solos: overlappingSolos};
-                    const participantData = {type: d.type, id: d.id};
+                    const participantData = {type: d.type, id: d.name};
                     props.onParticipantSelect && props.onParticipantSelect(participantData);
                 }
             });
