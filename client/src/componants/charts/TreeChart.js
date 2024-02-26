@@ -115,16 +115,14 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
 
         const tooltip = d3.select(tooltipRef.current)
             .attr("class", "tooltip")
-            .style("opacity", 0)
+            .style("opacity", 1)
             .style("position", "absolute")
-            .style("background-color", "white") // Light background for better readability
-            .style("border", "1px solid #ddd") // Light gray border
-            .style("border-radius", "4px") // Rounded corners
-            .style("padding", "10px") // Spacing inside the tooltip
-            .style("box-shadow", "0 1px 3px rgba(0,0,0,0.2)") // Subtle shadow for depth
-            .style("pointer-events", "none") // Ensures tooltip doesn't interfere with mouse events
-            .style("font-size", "0.9em") // Font size
-            .style("color", "#333"); // Dark text color for contrast
+            .style("background-color", "black")
+            .style("padding", "5px")
+            .style("border", "1px solid black")
+            .style("border-radius", "5px")
+            .style("pointer-events", "none")
+            .style("color", "#D4F1F4");
         // d3.select(svgRef.current).selectAll("*").remove();
         // Add links
         svg.selectAll(".link")

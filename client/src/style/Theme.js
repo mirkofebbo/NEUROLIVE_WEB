@@ -6,6 +6,7 @@ const prussian_blue = "#22333b";
 const midnight_green = "#005f73";
 const dark_cyan = "#0a9396";
 const tiffany_blue = "#94d2bd";
+const baby_blue = "#D4F1F4";
 const vanilla = "#e9d8a6";
 const gamboge = "#ee9b00";
 const alloy_orange = "#ca6702";
@@ -41,7 +42,7 @@ const Theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: prussian_blue,
-          color: tiffany_blue,
+          color: baby_blue,
         }
       }
     },
@@ -55,7 +56,7 @@ const Theme = createTheme({
             color: rich_black,
           },
           '& .MuiSelect-icon': {
-            color: tiffany_blue,
+            color: baby_blue,
           }
         }
       }
