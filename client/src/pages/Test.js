@@ -1,15 +1,13 @@
-import React from 'react';
-import {Typography } from '@mui/material';
-import HorizontalTree from '../componants/charts/TreeChart';
+import React, { useState, useEffect } from 'react';
+import BehaviorDataVisualization from '../componants/charts/Behavioural';
 
-function Test() {
-
+const App = () => {
   return (
-    <>
-    <Typography>TEST</Typography>
-    <HorizontalTree participantId={"A1"}> </HorizontalTree>
-    </>
+    <div>
+      <h1>Behavior Data Visualization</h1>
+      <BehaviorDataVisualization day={'SAT'} />
+    </div>
   );
-}
+};
 
-export default Test;
+export default App;

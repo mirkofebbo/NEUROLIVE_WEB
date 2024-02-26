@@ -11,31 +11,21 @@ function HSWBA() {
   const [selectedSolo, setSelectedSolo] = useState(null);
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [selectedData, setSelectedData] = useState(null);
-  const [selectedNode, setSelectedNode] = useState(null);
   const [selectedDay, setSelectedDay] = useState("SAT");
-
-  // In HSWBA component
-  const handleNodeClick = (nodeData) => {
-    console.log("Clicked node data:", nodeData);
-    // Perform actions based on clicked node data
-    // For example, update state with the clicked node data
-    setSelectedNode(nodeData);
-  
-    if("artist" in nodeData) setSelectedSong(nodeData);
-    if(nodeData.type === "participant") setSelectedParticipant(nodeData);
-    else if(nodeData.type === "solo") setSelectedSolo(nodeData);
-  };
 
   const handleSongSelect = (song) => {
     setSelectedSong(song);
+    setSelectedData(song);
   };
 
   const handleParticipantSelect = (participant) => {
     setSelectedParticipant(participant);
+    setSelectedData(participant);
   };
 
   const handleSoloSelect = (solo) => {
     setSelectedSolo(solo);
+    setSelectedData(solo);
   };
   const handleSelectedData = (selectedData) => {
     setSelectedData(selectedData);
@@ -48,18 +38,28 @@ function HSWBA() {
     <>
       <Typography variant="h3">How Shall We Begin Again</Typography>
       <Grid container spacing={1}>
-        {/* <Grid item xs={12} lg={8} xl={9}> */}
-        <Timeline onSongSelect={handleSongSelect} onSoloSelect={handleSelectedData} onParticipantSelect={handleSelectedData} onDayChange={handleSelectedDay}/>
-        {/* </Grid> */}
-        <Grid item xs={12} lg={8}>
+        <Grid item xs={12} lg={8} xl={12}>
+          <Timeline
+            onSongClick={handleSongSelect}
+            onSoloClick={handleSoloSelect}
+            onParticipantClick={handleParticipantSelect}
+            onDayChange={handleSelectedDay} />
+        </Grid>
+        <Grid item xs={12} lg={6}>
           {/* <ParticipantCard overlappingData={selectedParticipant} /> */}
-          <HorizontalTree props={selectedData} onNodeClick={handleNodeClick} selectedDay ={selectedDay}/>
+          <HorizontalTree props={selectedData}
+            onParticipantClick={setSelectedParticipant}
+            onSoloClick={setSelectedSolo}
+            onSongClick={setSelectedSong}
+            selectedDay={selectedDay} />
         </Grid>
-        <Grid item xs={12} lg={4} xl={3}>
-          <SpotifyData song={selectedSong} />
-          <ParticipantCard participantData={selectedNode}/>
+        <Grid item xs={12} lg={4} xl={2}>
+          {selectedSolo && <SoloCard soloData={selectedSolo} />}
+          {selectedParticipant && <ParticipantCard participantData={selectedParticipant} />}
         </Grid>
-
+        <Grid item xs={12} lg={4} xl={4}>
+          {selectedSong && <SpotifyData song={selectedSong} />}
+        </Grid>
       </Grid>
     </>
   );

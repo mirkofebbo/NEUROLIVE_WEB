@@ -5,14 +5,13 @@ import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/mater
 import { hierarchy, tree } from 'd3-hierarchy';
 import jsonData from '../../data/demo.json';
 
-const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
+const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, selectedDay }) => {
     const svgRef = useRef();
     const tooltipRef = useRef();
-    const [windowWidth, setWidth] = useState(window.innerWidth *0.65);
-
+    const [windowWidth, setWidth] = useState(window.innerWidth *0.46);
   
     const handleResize = () => {
-        setWidth(window.innerWidth *0.65);
+        setWidth(window.innerWidth *0.46);
     };
 
     useEffect(() => {
@@ -93,7 +92,7 @@ const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
             };
         }
 
-        const margin = { top: 20, right: 120, bottom: 20, left: 50 };
+        const margin = { top: 20, right: 150, bottom: 20, left: 50 };
         const width = windowWidth - margin.left - margin.right;
         const height = 500 - margin.top - margin.bottom;
 
@@ -188,14 +187,18 @@ const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
             .text(d => d.data.name);
 
         node.on("click", (event, d) => {
-            // Invoke the callback function passed from the parent component
-            // Check if onNodeClick is a function before calling it
-            console.log(d.data)
-            onNodeClick(d.data);
-
+            if (d.data.type === 'solo') {
+                console.log(d.data)
+                onSoloClick(d.data);
+            } else if (d.data.type === "participant") {
+                onParticipantClick(d.data);
+            } else {
+                onSongClick(d.data);
+            }
         });
-    }, [props, onNodeClick, windowWidth, selectedDay]);
+    }, [props, onParticipantClick, onSoloClick, onSongClick, windowWidth, selectedDay]);
 
+    if(props === null) return <div></div>;
 
     return (
         <Card style={{ width: '100%', overflow: 'visible', height: 'auto', minHeight: '400px' }}>

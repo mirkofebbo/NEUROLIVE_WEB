@@ -5,7 +5,7 @@ import jsonData from '../../data/demo.json'; // Replace with your actual import
 import { schemeTableau10 } from 'd3-scale-chromatic';
 
 
-const Timeline = (props) => {
+const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
     const ref = useRef();
 
     const [selectedDay, setSelectedDay] = useState('SAT');
@@ -207,7 +207,7 @@ const Timeline = (props) => {
             .on("click", (event, d) => {
 
                 if (d.type == 'solo'){
-                    props.onSoloSelect && props.onSoloSelect({
+                    onSoloClick({
                         type: d.type, id: d.name,
                         name: d.name,
                         start: d.start,
@@ -215,7 +215,7 @@ const Timeline = (props) => {
                     });
                 }
                 if (d.type === 'song') {
-                    props.onSongSelect && props.onSongSelect(d); // Call the prop here
+                    onSongClick(d); // Call the prop here
                 }
                 if (d.type === 'participant') {
                     // Remove existing lines
@@ -238,9 +238,8 @@ const Timeline = (props) => {
                         .attr('stroke', 'red')
                         .attr('stroke-width', 1));
                     
-                    // const { overlappingSongs, overlappingSolos} = getOverlappingEvents(d.start, d.stop);
-                    // const overlapingData = {songs: overlappingSongs, solos: overlappingSolos};
-                    const participantData = {
+             
+                    onParticipantClick({
                         type: d.type, id: d.name,
                         name: d.name,
                         start: d.start,
@@ -248,12 +247,11 @@ const Timeline = (props) => {
                         comment: d.commentary,
                         pupil: d.PUPIl_length_recording,
                         eeg: d.EEG_recording_length
-                    };
-                    props.onParticipantSelect && props.onParticipantSelect(participantData);
+                    });
                 }
             });
 
-    }, [value, width, selectedDay]);
+    }, [value, width, selectedDay, onParticipantClick, onSoloClick, onSongClick]);
 
     return (
         <Card>

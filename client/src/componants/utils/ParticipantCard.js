@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
 
 const ParticipantCard = ({ participantData }) => {
-    console.log("WTF")
-    console.log(participantData)
+
     if (!participantData) return <div>Select a Participant to view details</div>;
     if (participantData.type === "participant") {
         return (
@@ -16,7 +15,6 @@ const ParticipantCard = ({ participantData }) => {
                         Start: {participantData.start}
                         <br/>
                         Stop: {participantData.stop}
-
                     </Typography>
                     <Typography variant="body1">
                     comment:  {participantData.comment}<br />
