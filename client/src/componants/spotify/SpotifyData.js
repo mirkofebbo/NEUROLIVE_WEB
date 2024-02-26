@@ -29,7 +29,7 @@ const SpotifyData = ({ song }) => {
                     <MenuItem value="segments">Segments</MenuItem>
                     <MenuItem value="tatums">Tatums</MenuItem>
                 </Select>
-                <LineChart data={song[selectedData]} width={400} />
+                <LineChart data={song[selectedData]} width={450} />
             </CardContent>
         </Card>
     );

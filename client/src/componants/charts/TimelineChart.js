@@ -157,11 +157,9 @@ const Timeline = (props) => {
             .style("border-radius", "5px")
             .style("pointer-events", "none");
 
-
         let lines = []; // To keep track of the lines
 
-        svg
-            .selectAll('.interval')
+        svg.selectAll('.interval')
             .data(dataWithLanes)
             .enter()
             .append('rect')
@@ -193,7 +191,7 @@ const Timeline = (props) => {
                     tooltip.html(`${d.name} <br> by: ${d.artist}`);
                 }
                 else if (d.type === 'solo') {
-                    tooltip.html(`${d.name} <br> rating: ${d.ratings}`);
+                    tooltip.html(`${d.name}`);
                 } else {
                     tooltip.html(d.name);
                 }
@@ -209,7 +207,12 @@ const Timeline = (props) => {
             .on("click", (event, d) => {
 
                 if (d.type == 'solo'){
-                    props.onSoloSelect && props.onSoloSelect({type: d.type, id: d.name});
+                    props.onSoloSelect && props.onSoloSelect({
+                        type: d.type, id: d.name,
+                        name: d.name,
+                        start: d.start,
+                        stop: d.stop
+                    });
                 }
                 if (d.type === 'song') {
                     props.onSongSelect && props.onSongSelect(d); // Call the prop here
@@ -237,7 +240,15 @@ const Timeline = (props) => {
                     
                     // const { overlappingSongs, overlappingSolos} = getOverlappingEvents(d.start, d.stop);
                     // const overlapingData = {songs: overlappingSongs, solos: overlappingSolos};
-                    const participantData = {type: d.type, id: d.name};
+                    const participantData = {
+                        type: d.type, id: d.name,
+                        name: d.name,
+                        start: d.start,
+                        stop: d.stop,
+                        comment: d.commentary,
+                        pupil: d.PUPIl_length_recording,
+                        eeg: d.EEG_recording_length
+                    };
                     props.onParticipantSelect && props.onParticipantSelect(participantData);
                 }
             });

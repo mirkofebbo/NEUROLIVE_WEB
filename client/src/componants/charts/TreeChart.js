@@ -6,7 +6,6 @@ import { hierarchy, tree } from 'd3-hierarchy';
 import jsonData from '../../data/demo.json';
 
 const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
-    console.log(selectedDay)
     const svgRef = useRef();
     const tooltipRef = useRef();
     const [windowWidth, setWidth] = useState(window.innerWidth *0.65);
@@ -29,7 +28,7 @@ const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
         if (type === "song") return;
 
         const data = jsonData[selectedDay]
-        console.log(data)
+
         let hierarchy;
         if (type === "participant") {
             const participant = data.participants[id];
@@ -58,7 +57,6 @@ const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
                 }))
             };
         } else if (type === "solo") {
-            console.log('SOLO')
             const solo = data.solo[id];
 
             const participantIds = Object.keys(data.participants).filter(pid => {
@@ -148,7 +146,6 @@ const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
             .attr("class", d => "node" + (d.children ? " node--internal" : " node--leaf"))
             .attr("transform", d => `translate(${d.y},${d.x})`)
 
-
         node.append("circle")
             .attr("r", 10)
             .attr("fill", "#fff")
@@ -193,6 +190,7 @@ const HorizontalTree = ({ props, onNodeClick, selectedDay }) => {
         node.on("click", (event, d) => {
             // Invoke the callback function passed from the parent component
             // Check if onNodeClick is a function before calling it
+            console.log(d.data)
             onNodeClick(d.data);
 
         });
