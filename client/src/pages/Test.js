@@ -38,7 +38,6 @@ const App = () => {
               <MenuItem value='connection'>Connection</MenuItem>
               <MenuItem value='familiarity'>Familiarity</MenuItem>
               <MenuItem value='focus'>Focus</MenuItem>
-              {/* Add more sections as needed */}
             </Select>
           </Tooltip>
         </CardContent>

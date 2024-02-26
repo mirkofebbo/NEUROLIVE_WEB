@@ -13,17 +13,17 @@ function HSWBA() {
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [selectedData, setSelectedData] = useState(null);
   const [selectedDay, setSelectedDay] = useState("SAT");
-
+  // SONG
   const handleSongSelect = (song) => {
     setSelectedSong(song);
     setSelectedData(song);
   };
-
+  // PARTICIPANT
   const handleParticipantSelect = (participant) => {
     setSelectedParticipant(participant);
     setSelectedData(participant);
   };
-
+  // SOLO
   const handleSoloSelect = (solo) => {
     setSelectedSolo(solo);
     setSelectedData(solo);
@@ -31,9 +31,13 @@ function HSWBA() {
   const handleSelectedData = (selectedData) => {
     setSelectedData(selectedData);
   }
+  // DAY
   const handleSelectedDay = (selectedDay) => {
     setSelectedDay(selectedDay);
     setSelectedData(null);
+    setSelectedSong(null);
+    setSelectedParticipant(null);
+    setSelectedSolo(null);
   }
   return (
     <>
