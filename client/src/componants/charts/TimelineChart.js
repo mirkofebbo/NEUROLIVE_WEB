@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/material';
-import jsonData from '../../data/demo.json'; // Replace with your actual import
+import jsonData from '../../data/demo.json'; 
 import { schemeTableau10 } from 'd3-scale-chromatic';
 
 
@@ -13,7 +13,7 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
     const secondsToTime = (seconds) => {
         if (isNaN(seconds)) {
             console.error('Invalid input to secondsToTime:', seconds);
-            return "00:00:00"; // Return a default or indicate an error as appropriate
+            return "00:00:00"; 
         }
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -29,13 +29,13 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
     var min_domain = timeToSeconds("11:00:00");
     var max_domain = timeToSeconds("19:00:00");
     const [value, setValue] = useState([min_domain, max_domain]);
-    const [width, setWidth] = useState(window.innerWidth - 100); // Initial width
+    const [width, setWidth] = useState(window.innerWidth - 100); 
 
     const handleChange = (event, newValue) => {
         if (Array.isArray(newValue)) {
-            setValue(newValue.map(v => Math.max(min_domain, Math.min(v, max_domain)))); // Clamp values to domain
+            setValue(newValue.map(v => Math.max(min_domain, Math.min(v, max_domain)))); 
         } else {
-            setValue([Math.max(min_domain, Math.min(newValue, max_domain))]); // For single value sliders, adjust as necessary
+            setValue([Math.max(min_domain, Math.min(newValue, max_domain))]); 
         }
     };
     

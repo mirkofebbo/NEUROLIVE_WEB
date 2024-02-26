@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import BehaviorDataVisualization from '../componants/charts/Behavioural';
+import RatingsBarChart from '../componants/charts/Behavioural';
 
 const App = () => {
   return (
     <div>
       <h1>Behavior Data Visualization</h1>
-      <BehaviorDataVisualization day={'SAT'} />
+      <RatingsBarChart day={'SAT'} section={'connection'} />
     </div>
   );
 };

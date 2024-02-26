@@ -1,67 +1,91 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import jsonData from '../../data/demo.json'; // Replace with your actual import
+import { Paper } from '@mui/material';
+import jsonData from '../../data/demo.json';
+function RatingsBarChart({ day, section  }) {
 
-const BehaviorDataVisualization = ({ day }) => {
-console.log(day)
-    let soloData = jsonData[day].solo;
+  const ref = useRef(null);
 
-    const d3Container = useRef(null);
+  let data = jsonData[day].solo
 
-    useEffect(() => {
-        if (soloData && d3Container.current) {
-            const data = Object.values(soloData).map(d => ({ ...d.ratings_data, name: d.name })).sort(() => 0.5 - Math.random());
-            drawChart(data);
-        }
-    }, [soloData]);
-    
-    const drawChart = (data) => {
-        const svg = d3.select(d3Container.current);
-        svg.selectAll("*").remove(); // Clear svg content before redrawing
-      
-        const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-        const width = +svg.attr("width") - margin.left - margin.right;
-        const height = +svg.attr("height") - margin.top - margin.bottom;
-      
-        // Set up the scales
-        const x = d3.scaleBand().rangeRound([0, width]).padding(0.1);
-        const y = d3.scaleLinear().rangeRound([height, 0]);
-      
-        const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-      
-        // Set the domains for the scales
-        x.domain(data.map((d) => d.name));
-        y.domain([0, d3.max(data, (d) => d.mean_focus) || 100]); // Ensure domain is correctly set
-      
-        // X-axis
-        g.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", `translate(0,${height})`)
-          .call(d3.axisBottom(x));
-      
-        // Y-axis
-        g.append("g")
-          .attr("class", "axis axis--y")
-          .call(d3.axisLeft(y).ticks(10))
-          .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", "0.71em")
-          .attr("text-anchor", "end")
-          .text("Mean Focus");
-      
-        // Bars
-        g.selectAll(".bar")
-          .data(data)
-          .enter().append("rect")
-          .attr("class", "bar")
-          .attr("x", (d) => x(d.name))
-          .attr("y", (d) => y(d.mean_focus))
-          .attr("width", x.bandwidth())
-          .attr("height", (d) => height - y(d.mean_focus));
-      };
+  useEffect(() => {
+    if (data && ref.current) {
+      const dataArray = Object.values(data).map(item => ({
+        name: item.name,
+        mean: item.ratings_data[`mean_${section}`],
+        median: item.ratings_data[`median_${section}`],
+        rating: item.ratings_data[`rating_${section}`],
+        std: item.ratings_data[`std_${section}`]
+      }));
 
-    return <svg className="d3-component" width="800" height="600" ref={d3Container} />;
-};
+      const margin = { top: 20, right: 30, bottom: 40, left: 90 },
+        width = 600 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
-export default BehaviorDataVisualization;
+      // Clear SVG before redraw
+      d3.select(ref.current).selectAll("*").remove();
+
+      const svg = d3.select(ref.current)
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
+
+      const x0 = d3.scaleBand()
+        .rangeRound([0, width])
+        .paddingInner(0.1)
+        .domain(dataArray.map(d => d.name));
+
+      const x1 = d3.scaleBand()
+        .padding(0.05)
+        .domain(['mean', 'median', 'rating', 'std'])
+        .rangeRound([0, x0.bandwidth()]);
+
+      const y = d3.scaleLinear()
+        .domain([0, d3.max(dataArray, d => Math.max(d.mean, d.median, d.rating, d.std))])
+        .rangeRound([height, 0]);
+
+      const color = d3.scaleOrdinal()
+        .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]);
+
+      svg.append("g")
+        .selectAll("g")
+        .data(dataArray)
+        .enter().append("g")
+        .attr("transform", d => `translate(${x0(d.name)},0)`)
+        .selectAll("rect")
+        .data(d => ['mean', 'median', 'rating', 'std'].map(key => ({ key, value: d[key] })))
+        .enter().append("rect")
+        .attr("x", d => x1(d.key))
+        .attr("y", d => y(d.value))
+        .attr("width", x1.bandwidth())
+        .attr("height", d => height - y(d.value))
+        .attr("fill", d => color(d.key));
+
+      svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x0));
+
+      svg.append("g")
+        .attr("class", "axis")
+        .call(d3.axisLeft(y).ticks(null, "s"))
+        .append("text")
+        .attr("x", 2)
+        .attr("y", y(y.ticks().pop()) + 0.5)
+        .attr("dy", "0.32em")
+        .attr("fill", "#000")
+        .attr("font-weight", "bold")
+        .attr("text-anchor", "start")
+        .text(section);
+    }
+  }, [data, section]);
+  return (
+    <Paper>
+      <div ref={ref} />
+    </Paper>
+  );
+}
+
+export default RatingsBarChart;
