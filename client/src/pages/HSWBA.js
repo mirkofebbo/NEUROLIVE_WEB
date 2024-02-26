@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Container } from '@mui/material';
 import Timeline from '../componants/charts/TimelineChart';
 import SpotifyData from '../componants/spotify/SpotifyData';
 import SoloCard from '../componants/utils/SoloCard'
@@ -7,7 +7,7 @@ import ParticipantCard from '../componants/utils/ParticipantCard';
 import HorizontalTree from '../componants/charts/TreeChart';
 
 function HSWBA() {
-  
+
   const [selectedSong, setSelectedSong] = useState(null);
   const [selectedSolo, setSelectedSolo] = useState(null);
   const [selectedParticipant, setSelectedParticipant] = useState(null);
@@ -42,8 +42,8 @@ function HSWBA() {
   return (
     <>
       <Typography variant="h3">How Shall We Begin Again</Typography>
-      <Grid container spacing={1}>
-        <Grid item xs={12} lg={8} xl={12}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
           <Timeline
             onSongClick={handleSongSelect}
             onSoloClick={handleSoloSelect}
@@ -51,18 +51,18 @@ function HSWBA() {
             onDayChange={handleSelectedDay} />
         </Grid>
         <Grid item xs={12} lg={6}>
-          {/* <ParticipantCard overlappingData={selectedParticipant} /> */}
+                    {/* <ParticipantCard overlappingData={selectedParticipant} /> */}
           <HorizontalTree props={selectedData}
             onParticipantClick={setSelectedParticipant}
             onSoloClick={setSelectedSolo}
             onSongClick={setSelectedSong}
             selectedDay={selectedDay} />
         </Grid>
-        <Grid item xs={12} lg={4} xl={2}>
+        <Grid item xs={12} lg={2}>
           {selectedSolo && <SoloCard soloData={selectedSolo} />}
           {selectedParticipant && <ParticipantCard participantData={selectedParticipant} />}
         </Grid>
-        <Grid item xs={12} lg={4} xl={4}>
+        <Grid item xs={12} lg={4}>
           {selectedSong && <SpotifyData song={selectedSong} />}
         </Grid>
       </Grid>
