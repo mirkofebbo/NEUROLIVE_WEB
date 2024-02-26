@@ -88,6 +88,8 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
     const songs = Object.values(jsonData[selectedDay].songs).map(song => ({
         ...song,
         type: 'song',
+        h_start: song.start,
+        h_stop: song.stop,
         start: timeToSeconds(song.start),
         stop: timeToSeconds(song.stop)
     }));
@@ -95,6 +97,8 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
     const participants = Object.values(jsonData[selectedDay].participants).map(participant => ({
         ...participant,
         type: 'participant',
+        h_start: participant.start,
+        h_stop: participant.stop,
         start: timeToSeconds(participant.start),
         stop: timeToSeconds(participant.stop)
     }));
@@ -102,6 +106,8 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
     const solos = Object.values(jsonData[selectedDay].solo).map(solo => ({
         ...solo,
         type: 'solo',
+        h_start: solo.start,
+        h_stop: solo.stop,
         start: timeToSeconds(solo.start),
         stop: timeToSeconds(solo.stop)
     }));
@@ -210,8 +216,8 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
                     onSoloClick({
                         type: d.type, id: d.name,
                         name: d.name,
-                        start: d.start,
-                        stop: d.stop
+                        start: d.h_start,
+                        stop: d.h_stop
                     });
                 }
                 if (d.type === 'song') {
@@ -242,8 +248,8 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
                     onParticipantClick({
                         type: d.type, id: d.name,
                         name: d.name,
-                        start: d.start,
-                        stop: d.stop,
+                        start: d.h_start,
+                        stop: d.h_stop,
                         comment: d.commentary,
                         pupil: d.PUPIl_length_recording,
                         eeg: d.EEG_recording_length

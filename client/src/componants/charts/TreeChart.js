@@ -8,10 +8,10 @@ import jsonData from '../../data/demo.json';
 const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, selectedDay }) => {
     const svgRef = useRef();
     const tooltipRef = useRef();
-    const [windowWidth, setWidth] = useState(window.innerWidth *0.46);
-  
+    const [windowWidth, setWidth] = useState(window.innerWidth * 0.46);
+
     const handleResize = () => {
-        setWidth(window.innerWidth *0.46);
+        setWidth(window.innerWidth * 0.46);
     };
 
     useEffect(() => {
@@ -151,28 +151,31 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
             .attr("stroke", "steelblue")
             .attr("stroke-width", "3px")
             .on("mouseover", (event, d) => {
-                d3.select(event.currentTarget).attr("fill", "black");
+                if (d.data.name!="Participants" && d.data.name!="Songs") {
+                    console.log(d)
+                    d3.select(event.currentTarget).attr("fill", "black");
 
-                tooltip.interrupt().transition();
-                tooltip.style('opacity', 1)
-                    .html(() => {
-                        console.log(d.data.type)
+                    tooltip.interrupt().transition();
+                    tooltip.style('opacity', 1)
+                        .html(() => {
+                            console.log(d.data.type)
 
-                        // Customize content based on node type
-                        let content = `<strong>${d.data.name}</strong>`;
+                            // Customize content based on node type
+                            let content = `<strong>${d.data.name}</strong>`;
 
-                        if (d.data.type === 'solo') {
-                            content += `<br> start: ${d.data.start} <br> stop: ${d.data.stop}`
+                            if (d.data.type === 'solo') {
+                                content += `<br> start: ${d.data.start} <br> stop: ${d.data.stop}`
 
-                        } else if (d.data.type === "participant") {
-                            content += `<br> start: ${d.data.start} <br> stop: ${d.data.stop}`
-                        } else {
-                            content += `<br/>Artist: ${d.data.artist}<br/>Start: ${d.data.start}<br/>Stop: ${d.data.stop}`;
-                        }
-                        return content;
-                    })
-                    .style("left", `${event.pageX + 15}px`)
-                    .style("top", `${event.pageY + 15}px`);
+                            } else if (d.data.type === "participant") {
+                                content += `<br> start: ${d.data.start} <br> stop: ${d.data.stop}`
+                            } else {
+                                content += `<br/>Artist: ${d.data.artist}<br/>Start: ${d.data.start}<br/>Stop: ${d.data.stop}`;
+                            }
+                            return content;
+                        })
+                        .style("left", `${event.pageX + 15}px`)
+                        .style("top", `${event.pageY + 15}px`);
+                }
             })
             .on("mouseout", (event, d) => {
                 d3.select(event.currentTarget).attr("fill", "#fff");
@@ -187,18 +190,20 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
             .text(d => d.data.name);
 
         node.on("click", (event, d) => {
-            if (d.data.type === 'solo') {
-                console.log(d.data)
-                onSoloClick(d.data);
-            } else if (d.data.type === "participant") {
-                onParticipantClick(d.data);
-            } else {
-                onSongClick(d.data);
+            if (d.data.name!="Participants" && d.data.name!="Songs") {
+                if (d.data.type === 'solo') {
+                    console.log(d.data)
+                    onSoloClick(d.data);
+                } else if (d.data.type === "participant") {
+                    onParticipantClick(d.data);
+                } else {
+                    onSongClick(d.data);
+                }
             }
         });
     }, [props, onParticipantClick, onSoloClick, onSongClick, windowWidth, selectedDay]);
 
-    if(props === null) return <div></div>;
+    if (props === null) return <div></div>;
 
     return (
         <Card style={{ width: '100%', overflow: 'visible', height: 'auto', minHeight: '400px' }}>

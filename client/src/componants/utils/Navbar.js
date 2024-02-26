@@ -25,10 +25,10 @@ const NavBar = ({ setPage }) => {
                         <SearchIcon />
                         <Typography variant="h6" sx={{ ml: 1 }}>DW</Typography>
                     </IconButton>
-                    <IconButton color="inherit" onClick={() => setPage('Albane')}>
+                    {/* <IconButton color="inherit" onClick={() => setPage('Albane')}>
                         <SearchIcon />
                         <Typography variant="h6" sx={{ ml: 1 }}>Albane</Typography>
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton color="inherit" onClick={() => setPage('Test')}>
                         <SearchIcon />
                         <Typography variant="h6" sx={{ ml: 1 }}>Test</Typography>
