@@ -7,6 +7,7 @@ import ParticipantCard from '../componants/utils/ParticipantCard';
 import HorizontalTree from '../componants/charts/TreeChart';
 
 function HSWBA() {
+  
   const [selectedSong, setSelectedSong] = useState(null);
   const [selectedSolo, setSelectedSolo] = useState(null);
   const [selectedParticipant, setSelectedParticipant] = useState(null);

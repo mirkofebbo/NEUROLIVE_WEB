@@ -1,25 +1,40 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { Paper } from '@mui/material';
+import { Card, CardContent } from '@mui/material';
+
 import jsonData from '../../data/demo.json';
-function RatingsBarChart({ day, section  }) {
-
+function RatingsBarChart({ day, section }) {
   const ref = useRef(null);
-
   let data = jsonData[day].solo
+  const [windowWidth, setWidth] = useState(window.innerWidth);
+
+  const handleResize = () => {
+    setWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (data && ref.current) {
+
       const dataArray = Object.values(data).map(item => ({
         name: item.name,
-        mean: item.ratings_data[`mean_${section}`],
-        median: item.ratings_data[`median_${section}`],
-        rating: item.ratings_data[`rating_${section}`],
-        std: item.ratings_data[`std_${section}`]
+        values: [
+          item.ratings_data[`mean_${section}`],
+          item.ratings_data[`median_${section}`],
+          item.ratings_data[`rating_${section}`],
+          item.ratings_data[`std_${section}`]
+        ].sort(d3.ascending)
       }));
 
       const margin = { top: 20, right: 30, bottom: 40, left: 90 },
-        width = 600 - margin.left - margin.right,
+        width = windowWidth - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
       // Clear SVG before redraw
@@ -32,59 +47,92 @@ function RatingsBarChart({ day, section  }) {
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
-      const x0 = d3.scaleBand()
-        .rangeRound([0, width])
-        .paddingInner(0.1)
+      const x = d3.scaleBand()
+        .range([0, width])
+        .padding(0.1)
         .domain(dataArray.map(d => d.name));
 
-      const x1 = d3.scaleBand()
-        .padding(0.05)
-        .domain(['mean', 'median', 'rating', 'std'])
-        .rangeRound([0, x0.bandwidth()]);
-
       const y = d3.scaleLinear()
-        .domain([0, d3.max(dataArray, d => Math.max(d.mean, d.median, d.rating, d.std))])
-        .rangeRound([height, 0]);
-
-      const color = d3.scaleOrdinal()
-        .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]);
+        .domain([0, d3.max(dataArray, d => Math.max(...d.values))])
+        .range([height, 0]);
 
       svg.append("g")
-        .selectAll("g")
-        .data(dataArray)
-        .enter().append("g")
-        .attr("transform", d => `translate(${x0(d.name)},0)`)
-        .selectAll("rect")
-        .data(d => ['mean', 'median', 'rating', 'std'].map(key => ({ key, value: d[key] })))
-        .enter().append("rect")
-        .attr("x", d => x1(d.key))
-        .attr("y", d => y(d.value))
-        .attr("width", x1.bandwidth())
-        .attr("height", d => height - y(d.value))
-        .attr("fill", d => color(d.key));
+        .call(d3.axisLeft(y));
 
       svg.append("g")
-        .attr("class", "axis")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x0));
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .remove();
 
-      svg.append("g")
-        .attr("class", "axis")
-        .call(d3.axisLeft(y).ticks(null, "s"))
-        .append("text")
-        .attr("x", 2)
-        .attr("y", y(y.ticks().pop()) + 0.5)
-        .attr("dy", "0.32em")
-        .attr("fill", "#000")
-        .attr("font-weight", "bold")
-        .attr("text-anchor", "start")
-        .text(section);
+      // Draw box plots
+      dataArray.forEach((d, i) => {
+        let sortedValues = d.values.sort(d3.ascending);
+        let q1 = d3.quantile(sortedValues, 0.25);
+        let median = d3.quantile(sortedValues, 0.5);
+        let q3 = d3.quantile(sortedValues, 0.75);
+        let interQuantileRange = q3 - q1;
+        let min = q1 - 1.5 * interQuantileRange;
+        let max = q3 + 1.5 * interQuantileRange;
+
+        // Adjust min and max if they are beyond actual data points
+        min = Math.max(min, d3.min(sortedValues));
+        max = Math.min(max, d3.max(sortedValues));
+        // Box
+        svg.append("rect")
+          .attr("x", x(d.name))
+          .attr("y", y(q3))
+          .attr("height", y(q1) - y(q3))
+          .attr("width", x.bandwidth())
+          .attr("stroke", "white")
+          .style("fill", "orange");
+
+        // Median line
+        svg.append("line")
+          .attr("x1", x(d.name))
+          .attr("x2", x(d.name) + x.bandwidth())
+          .attr("y1", y(median))
+          .attr("y2", y(median))
+          .attr("stroke", "red")
+          .attr("stroke-width", 4);
+
+        // Min and max lines (whiskers)
+        svg.append("line")
+          .attr("x1", x(d.name) + x.bandwidth() / 2)
+          .attr("x2", x(d.name) + x.bandwidth() / 2)
+          .attr("y1", y(min))
+          .attr("y2", y(max))
+          .attr("stroke", "white");
+
+        // Min and max horizontal lines
+        svg.append("line")
+          .attr("x1", x(d.name))
+          .attr("x2", x(d.name) + x.bandwidth())
+          .attr("y1", y(min))
+          .attr("y2", y(min))
+          .attr("stroke", "white")
+          .attr("stroke-width", 2);
+
+        svg.append("line")
+          .attr("x1", x(d.name))
+          .attr("x2", x(d.name) + x.bandwidth())
+          .attr("y1", y(max))
+          .attr("y2", y(max))
+          .attr("stroke", "white")
+          .attr("stroke-width", 2);
+
+      });
     }
-  }, [data, section]);
+  }, [data, section, windowWidth]);
+
   return (
-    <Paper>
-      <div ref={ref} />
-    </Paper>
+    <>
+      <Card>
+        <CardContent>
+          <div ref={ref} />
+        </CardContent>
+      </Card>
+    </>
   );
 }
 

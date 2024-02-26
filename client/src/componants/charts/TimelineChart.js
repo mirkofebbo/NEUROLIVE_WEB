@@ -5,9 +5,8 @@ import jsonData from '../../data/demo.json';
 import { schemeTableau10 } from 'd3-scale-chromatic';
 
 
-const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
+const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongClick,}) => {
     const ref = useRef();
-
     const [selectedDay, setSelectedDay] = useState('SAT');
 
     const secondsToTime = (seconds) => {
@@ -28,6 +27,7 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
 
     var min_domain = timeToSeconds("11:00:00");
     var max_domain = timeToSeconds("19:00:00");
+    
     const [value, setValue] = useState([min_domain, max_domain]);
     const [width, setWidth] = useState(window.innerWidth - 100); 
 
@@ -44,7 +44,7 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
     };
     const handleDayChange = (event) => {
         setSelectedDay(event.target.value);
-        props.onDayChange(event.target.value);
+        onDayChange(event.target.value);
     };
 
     useEffect(() => {
@@ -257,7 +257,7 @@ const Timeline = ({props, onParticipantClick, onSoloClick, onSongClick,}) => {
                 }
             });
 
-    }, [value, width, selectedDay, onParticipantClick, onSoloClick, onSongClick]);
+    }, [value, width, selectedDay, onDayChange, onParticipantClick, onSoloClick, onSongClick]);
 
     return (
         <Card>
