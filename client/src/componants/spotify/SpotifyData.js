@@ -5,6 +5,22 @@ import LineChart from '../charts/LineChart';
 const SpotifyData = ({ song }) => {
     const [selectedData, setSelectedData] = useState('bars');
     if (!song) return <div>Select a song to view details</div>;
+    if (!song.liveness) return (
+    <Card>
+        <CardContent>
+            <Typography variant="h5" component="div">
+                {song.name}
+            </Typography>
+            <Typography variant="h6">
+                by: {song.artist}
+            </Typography>
+            <Typography variant="body1">
+            No Data
+            </Typography>
+
+        </CardContent>
+    </Card>
+    )
     const handleChange = (event) => {
         setSelectedData(event.target.value);
     };
