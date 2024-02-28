@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/NEUROLIVE_WEB/static/js/main.c02eb948.js",
+    "main.js": "/NEUROLIVE_WEB/static/js/main.28c4973c.js",
     "index.html": "/NEUROLIVE_WEB/index.html",
-    "main.c02eb948.js.map": "/NEUROLIVE_WEB/static/js/main.c02eb948.js.map"
+    "main.28c4973c.js.map": "/NEUROLIVE_WEB/static/js/main.28c4973c.js.map"
   },
   "entrypoints": [
-    "static/js/main.c02eb948.js"
+    "static/js/main.28c4973c.js"
   ]
 }
