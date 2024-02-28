@@ -19,11 +19,11 @@ const auburn = "#9b2226";
 
 const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDuration }) => {
     let color_scheme = { 
-        'Audience EEG Synchrony (C1)': gamboge,
-        'Respiration Synchrony': midnight_green,
-        'Choreographer/Performer Rating': rich_black,
-        'Sound Amplitude': vanilla,
-        'Audio Pulse Clarity': auburn,
+        'Audience EEG Synchrony (C1)': "#4DA6FF",
+        'Respiration Synchrony': "#00E0E0",
+        'Choreographer/Performer Rating': "#66FF66",
+        'Sound Amplitude': "#CC66FF",
+        'Audio Pulse Clarity': "#FF66B2",
     }
 
     const ref = useRef();
