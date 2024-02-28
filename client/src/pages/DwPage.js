@@ -46,7 +46,7 @@ const DW = () => {
       const fetchedData = await fetchData('ALL', 'luminance');
       setData(fetchedData);
       if (fetchedData.length > 0) {
-        const allowed = ['Dancer Acceleration Non-Windowed', 'Dancer Distance Non-Windowed', 'Sound Amplitude', 'Luminance Non-Windowed']
+        const allowed = ['Audience EEG Synchrony (C1)', 'Respiration Synchrony', 'Choreographer/Performer Rating','Sound Amplitude','Audio Pulse Clarity']
         const participants = Object.keys(fetchedData[0]).filter(key => allowed.includes(key));
         setAllParticipants(participants);
         setSelectedParticipants(participants);

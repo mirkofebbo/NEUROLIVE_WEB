@@ -1,24 +1,37 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
 import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/material';
-import jsonData from '../../data/demo.json'; 
+import jsonData from '../../data/demo.json';
 import { schemeTableau10 } from 'd3-scale-chromatic';
 
+const rich_black = "#001219";
+const prussian_blue = "#22333b";
+const midnight_green = "#005f73";
+const dark_cyan = "#0a9396";
+const tiffany_blue = "#94d2bd";
+const baby_blue = "#D4F1F4";
+const vanilla = "#e9d8a6";
+const gamboge = "#ee9b00";
+const alloy_orange = "#ca6702";
+const rust = "#bb3e03";
+const rufous = "#ae2012";
+const auburn = "#9b2226";
 
-const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongClick,}) => {
+
+const Timeline = ({ props, onDayChange, onParticipantClick, onSoloClick, onSongClick, }) => {
     const ref = useRef();
     const [selectedDay, setSelectedDay] = useState('SAT');
 
     const secondsToTime = (seconds) => {
         if (isNaN(seconds)) {
             console.error('Invalid input to secondsToTime:', seconds);
-            return "00:00:00"; 
+            return "00:00:00";
         }
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    };    
+    };
 
     const timeToSeconds = (time) => {
         const [hours, minutes, seconds] = time.split(':').map(Number);
@@ -27,18 +40,18 @@ const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongCl
 
     var min_domain = timeToSeconds("11:00:00");
     var max_domain = timeToSeconds("19:00:00");
-    
+
     const [value, setValue] = useState([min_domain, max_domain]);
-    const [width, setWidth] = useState(window.innerWidth - 100); 
+    const [width, setWidth] = useState(window.innerWidth - 100);
 
     const handleChange = (event, newValue) => {
         if (Array.isArray(newValue)) {
-            setValue(newValue.map(v => Math.max(min_domain, Math.min(v, max_domain)))); 
+            setValue(newValue.map(v => Math.max(min_domain, Math.min(v, max_domain))));
         } else {
-            setValue([Math.max(min_domain, Math.min(newValue, max_domain))]); 
+            setValue([Math.max(min_domain, Math.min(newValue, max_domain))]);
         }
     };
-    
+
     const handleResize = () => {
         setWidth(window.innerWidth - 100);
     };
@@ -114,22 +127,22 @@ const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongCl
 
     // Get solo and songs for the selected participant
     const getOverlappingEvents = (participantStart, participantStop) => {
-        const overlappingSongs = songs.filter(song => 
-            isOverlapping({start: participantStart, stop: participantStop}, song)    
+        const overlappingSongs = songs.filter(song =>
+            isOverlapping({ start: participantStart, stop: participantStop }, song)
         );
-        const overlappingSolos = solos.filter(solo => 
-            isOverlapping({start: participantStart, stop: participantStop}, solo)            
+        const overlappingSolos = solos.filter(solo =>
+            isOverlapping({ start: participantStart, stop: participantStop }, solo)
         );
-        return {overlappingSongs, overlappingSolos};
+        return { overlappingSongs, overlappingSolos };
     }
     const combinedData = [...songs, ...solos, ...participants];
     const dataWithLanes = allocateLanes(combinedData);
 
     useEffect(() => {
         // Clear the chart container
-        const songColor = schemeTableau10[3];
-        const eegColor = schemeTableau10[9];
-        const soloColor = schemeTableau10[1];
+        const songColor = tiffany_blue;
+        const soloColor = gamboge;
+        const eegColor = vanilla;
 
         d3.select(ref.current).selectAll('*').remove();
 
@@ -165,10 +178,12 @@ const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongCl
 
         let lines = []; // To keep track of the lines
 
-        svg.selectAll('.interval')
+        const interval = svg.selectAll('.interval')
             .data(dataWithLanes)
             .enter()
-            .append('rect')
+            .append('g');
+
+        interval.append('rect')
             .attr('x', d => x(Math.max(d.start, value[0])))
             .attr('width', d => x(Math.min(d.stop, value[1])) - x(Math.max(d.start, value[0])))
             .attr('y', d => {
@@ -212,7 +227,7 @@ const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongCl
             })
             .on("click", (event, d) => {
 
-                if (d.type == 'solo'){
+                if (d.type == 'solo') {
                     onSoloClick({
                         type: d.type, id: d.name,
                         name: d.name,
@@ -243,8 +258,8 @@ const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongCl
                         .attr('y2', HEIGHT)
                         .attr('stroke', 'red')
                         .attr('stroke-width', 1));
-                    
-             
+
+
                     onParticipantClick({
                         type: d.type, id: d.name,
                         name: d.name,
@@ -256,6 +271,24 @@ const Timeline = ({props, onDayChange, onParticipantClick, onSoloClick, onSongCl
                     });
                 }
             });
+
+        interval.append('text')
+            .attr('x', d => x(Math.max(d.start, value[0])) + 3) 
+            .attr('y', d => {
+                if (d.type === 'song') return 15;
+                if (d.type === 'solo') return 23.5;
+                return (d.lane + 3) *9.95 + barHeight / 2; 
+            })
+            .attr('dy', '.35em') 
+            .attr('text-anchor', 'start') 
+            .text(d => {
+                // if (d.type === 'solo') return `${d.name}`;
+                if (d.type === 'participant') return `${d.name}`;
+                return ''; 
+            })
+            .attr('fill', rich_black) 
+            .attr('font-weight', 'bolder')
+            .attr('font-size', '10px'); 
 
     }, [value, width, selectedDay, onDayChange, onParticipantClick, onSoloClick, onSongClick]);
 

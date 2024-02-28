@@ -4,13 +4,26 @@ import { Card, CardContent,  Slider } from '@mui/material';
 
 const HEIGHT = 300;
 //https://www.npmjs.com/package/react-youtube
+const rich_black = "#001219";
+const prussian_blue = "#22333b";
+const midnight_green = "#005f73";
+const dark_cyan = "#0a9396";
+const tiffany_blue = "#94d2bd";
+const baby_blue = "#D4F1F4";
+const vanilla = "#e9d8a6";
+const gamboge = "#ee9b00";
+const alloy_orange = "#ca6702";
+const rust = "#bb3e03";
+const rufous = "#ae2012";
+const auburn = "#9b2226";
 
 const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDuration }) => {
     let color_scheme = { 
-        'Luminance Non-Windowed': '#FFA500',
-        'Sound Amplitude': '#FC2E20',
-        'Dancer Acceleration Non-Windowed': '#82A4E3',
-        'Dancer Distance Non-Windowed': '#0000FF',
+        'Audience EEG Synchrony (C1)': gamboge,
+        'Respiration Synchrony': midnight_green,
+        'Choreographer/Performer Rating': rich_black,
+        'Sound Amplitude': vanilla,
+        'Audio Pulse Clarity': auburn,
     }
 
     const ref = useRef();
@@ -130,7 +143,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
                     .attr("y2", HEIGHT - MARGIN.BOTTOM)
                     .attr("stroke", "white")
                     .attr("stroke-opacity", 0.5)
-                    .attr("stroke-width", 5);
+                    .attr("stroke-width", 10);
             }
         }
 
