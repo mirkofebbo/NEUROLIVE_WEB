@@ -11,6 +11,10 @@ const fetchData = async (day, type, setData) => {
   return parsedData || [];
 };
 
+function map(value, fromLow, fromHigh, toLow, toHigh) {
+  return (value - fromLow) / (fromHigh - fromLow) * (toHigh - toLow) + toLow;
+}
+
 const DW = () => {
   
   const [data, setData] = useState([]);
@@ -23,7 +27,7 @@ const DW = () => {
   const onReady = (event) => {
     setPlayer(event.target);
     setTimeout(() => {
-      setVideoDuration(event.target.getDuration());
+      setVideoDuration(3315.0);
     }, 1000);
   };
 
@@ -31,11 +35,16 @@ const DW = () => {
     // Update video time every second
     const interval = setInterval(() => {
       if (player && player.getCurrentTime) {
-        setVideoCurrentTime(player.getCurrentTime());
+
+        let map_time = map(player.getCurrentTime(), 12.442885, 3317.937328, 0.0, 3228.0);
+        setVideoCurrentTime(map_time);
+        // video start time : 12.442885
+        // Video end time: 3317.93732
       }
     }, 1000);
     return () => clearInterval(interval);
   };
+
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));

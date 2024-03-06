@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, CardContent, Typography, } from '@mui/material';
 
 const SoloCard = ({ soloData }) => {
-    console.log(soloData)
     if (!soloData) return <div>Select a solo to view details</div>;
     if (soloData.type === 'solo') {
         return (

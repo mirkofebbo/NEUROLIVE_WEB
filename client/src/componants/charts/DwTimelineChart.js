@@ -4,20 +4,9 @@ import { Card, CardContent,  Slider } from '@mui/material';
 
 const HEIGHT = 300;
 //https://www.npmjs.com/package/react-youtube
-const rich_black = "#001219";
-const prussian_blue = "#22333b";
-const midnight_green = "#005f73";
-const dark_cyan = "#0a9396";
-const tiffany_blue = "#94d2bd";
-const baby_blue = "#D4F1F4";
-const vanilla = "#e9d8a6";
-const gamboge = "#ee9b00";
-const alloy_orange = "#ca6702";
-const rust = "#bb3e03";
-const rufous = "#ae2012";
-const auburn = "#9b2226";
 
 const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDuration }) => {
+
     let color_scheme = { 
         'Audience EEG Synchrony (C1)': "#4DA6FF",
         'Respiration Synchrony': "#00E0E0",
@@ -74,7 +63,6 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
             .attr('height', HEIGHT + MARGIN.TOP + MARGIN.BOTTOM);
         
         const adjustedData = data.map(d => ({ ...d, index: d.index }));
-        console.log(adjustedData)
         const visibleData = adjustedData.slice(XRange[0], XRange[1] + 1);
     
         const xScale = d3.scaleBand()

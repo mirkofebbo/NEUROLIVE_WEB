@@ -13,6 +13,10 @@ const alloy_orange = "#ca6702";
 const rust = "#bb3e03";
 const rufous = "#ae2012";
 const auburn = "#9b2226";
+const white = "#FFFFFF";
+const mint_green = "#CBF3F0";
+const sunset = "#FFCA85";
+const antiue_white = "#FFF6EB";
 
 const Theme = createTheme({
   typography: {
@@ -26,7 +30,7 @@ const Theme = createTheme({
   },
   palette: {
     background: {
-      default: rich_black,
+      default: sunset,
     },
     primary: {
       main: alloy_orange,
@@ -35,29 +39,30 @@ const Theme = createTheme({
       main: midnight_green,
     },
     text: {
-      primary: vanilla,
+      primary: rich_black,
     },
   },
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: prussian_blue,
-          color: baby_blue,
+          backgroundColor: antiue_white,
+          color: rich_black,
         }
       }
     },
+
     MuiSelect: {
       styleOverrides: {
         root: {
-          backgroundColor: midnight_green,
-          color: vanilla,
+          backgroundColor: vanilla,
+          color: rich_black,
           '&:hover': {
             backgroundColor: gamboge,
             color: rich_black,
           },
           '& .MuiSelect-icon': {
-            color: baby_blue,
+            color: rich_black,
           }
         }
       }
@@ -65,7 +70,7 @@ const Theme = createTheme({
     MuiMenu: {
       styleOverrides: {
         paper: {
-          backgroundColor: prussian_blue, 
+          backgroundColor: antiue_white, 
         }
       }
     },

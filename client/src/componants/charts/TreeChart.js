@@ -5,6 +5,23 @@ import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/mater
 import { hierarchy, tree } from 'd3-hierarchy';
 import jsonData from '../../data/demo.json';
 
+const rich_black = "#001219";
+const prussian_blue = "#22333b";
+const midnight_green = "#005f73";
+const dark_cyan = "#0a9396";
+const tiffany_blue = "#94d2bd";
+const baby_blue = "#D4F1F4";
+const vanilla = "#e9d8a6";
+const gamboge = "#ee9b00";
+const alloy_orange = "#ca6702";
+const rust = "#bb3e03";
+const rufous = "#ae2012";
+const auburn = "#9b2226";
+const white = "#FFFFFF";
+const mint_green = "#CBF3F0";
+const sunset = "#FFCA85";
+const antiue_white = "#FFFF";
+
 const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, selectedDay }) => {
     const svgRef = useRef();
     const tooltipRef = useRef();
@@ -122,7 +139,7 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
             .style("border", "1px solid black")
             .style("border-radius", "5px")
             .style("pointer-events", "none")
-            .style("color", "#D4F1F4");
+            .style("color", "#FFFF");
         // d3.select(svgRef.current).selectAll("*").remove();
         // Add links
         svg.selectAll(".link")
@@ -133,7 +150,7 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
                 .x(d => d.y)
                 .y(d => d.x))
             .attr("fill", "none")
-            .attr("stroke", "#555")
+            .attr("stroke", sunset)
             .attr("stroke-width", 2);
 
         // Add nodes
@@ -182,7 +199,7 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
 
         node.append("text")
             .attr("dy", "0.31em")
-            .attr("fill", "#fff")
+            .attr("fill", rich_black)
             .attr("x", d => d.children ? -12 : 12)
             .style("text-anchor", d => d.children ? "end" : "start")
             .text(d => d.data.name);
