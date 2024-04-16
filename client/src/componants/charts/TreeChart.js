@@ -48,8 +48,9 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
         let hierarchy;
         if (type === "participant") {
             const participant = data.participants[id];
+
             const solos = Object.values(data.solo).filter(solo =>
-                solo.start >= participant.start && solo.stop <= participant.stop
+                solo.EEG_participants.includes(props.id) // Assuming props.id is the participant's ID
             );
             const songs = solos.flatMap(solo =>
                 Object.values(data.songs).filter(song =>
@@ -75,11 +76,11 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
         } else if (type === "solo") {
             const solo = data.solo[id];
 
-            const participantIds = Object.keys(data.participants).filter(pid => {
-                const p = data.participants[pid];
-                return solo.start >= p.start && solo.stop <= p.stop;
-            });
-            const participants = participantIds.map(pid => data.participants[pid]);
+
+            const participants = solo.eye_participants.map(id => ({
+                ...data.participants[id]
+            }))
+
             const songs = Object.values(data.songs).filter(song =>
                 song.start >= solo.start && song.stop <= solo.stop
             );
@@ -166,7 +167,7 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
             .attr("stroke", "steelblue")
             .attr("stroke-width", "3px")
             .on("mouseover", (event, d) => {
-                if (d.data.name!="Participants" && d.data.name!="Songs") {
+                if (d.data.name != "Participants" && d.data.name != "Songs") {
                     console.log(d)
                     d3.select(event.currentTarget).attr("fill", "black");
 
@@ -205,7 +206,7 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
             .text(d => d.data.name);
 
         node.on("click", (event, d) => {
-            if (d.data.name!="Participants" && d.data.name!="Songs") {
+            if (d.data.name != "Participants" && d.data.name != "Songs") {
                 if (d.data.type === 'solo') {
                     console.log(d.data)
                     onSoloClick(d.data);
