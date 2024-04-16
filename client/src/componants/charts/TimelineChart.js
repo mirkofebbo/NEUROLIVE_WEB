@@ -170,7 +170,7 @@ const Timeline = ({ props, onDayChange, onParticipantClick, onSoloClick, onSongC
             .attr("class", "tooltip")
             .style("opacity", 0)
             .style("position", "absolute")
-            .style("background-color", "black")
+            .style("background-color", baby_blue)
             .style("padding", "5px")
             .style("border", "1px solid black")
             .style("border-radius", "5px")
