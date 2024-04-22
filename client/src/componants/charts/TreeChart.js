@@ -50,7 +50,7 @@ const HorizontalTree = ({ props, onParticipantClick, onSoloClick, onSongClick, s
             const participant = data.participants[id];
 
             const solos = Object.values(data.solo).filter(solo =>
-                solo.EEG_participants.includes(props.id) // Assuming props.id is the participant's ID
+                solo.eye_participants.includes(props.id) // Assuming props.id is the participant's ID
             );
             const songs = solos.flatMap(solo =>
                 Object.values(data.songs).filter(song =>
