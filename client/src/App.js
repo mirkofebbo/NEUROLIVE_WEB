@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CssBaseline, Box, Container } from '@mui/material';
+
 import NavBar from './componants/utils/Navbar';
 import HSWBA from './pages/HSWBA';
-import DwPage from './pages/DwPage';
+import DW from './pages/DW';
 import HomePage from './pages/HomePage';
 import Albane from './pages/Albane';
 import Test from './pages/Test';
@@ -12,18 +14,13 @@ function App() {
   const [page, setPage] = useState('DwPage');
 
   return (
-    <div>
-      <CssBaseline />
-      <Box display="flex" flexDirection="column" minHeight="100vh">
-        <NavBar setPage={setPage} />
-          {page === 'HomePage' && <HomePage />}
-          {page === 'HSWBA' && <HSWBA />}
-          {page === 'DW' && <DwPage />}
-          {page === 'Albane' && <Albane />}
-          {page === 'Test' && <Test />}
-        {/* <Footer></Footer> */}
-      </Box>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/HSWBA" element={<HSWBA />} />
+        <Route path="/DW" element={<DW />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

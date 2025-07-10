@@ -17,7 +17,7 @@ const DwTimelineChart = ({ data, selectedParticipants, videoCurrentTime, videoDu
 
     const ref = useRef();
     const min_Xdomain = 0;
-    const max_Xdomain = data.length - 1;
+    const max_Xdomain = 3228;
     const min_Ydomain = -10;
     const max_Ydomain = 10
     const [width, setWidth] = useState(window.innerWidth- 80);

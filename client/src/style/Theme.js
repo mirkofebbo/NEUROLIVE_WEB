@@ -16,6 +16,7 @@ const auburn = "#9b2226";
 const white = "#FFFFFF";
 const mint_green = "#CBF3F0";
 const sunset = "#FFCA85";
+const horrible_green = "#dcfc10"
 const antiue_white = "#FFF6EB";
 
 const Theme = createTheme({
@@ -30,7 +31,7 @@ const Theme = createTheme({
   },
   palette: {
     background: {
-      default: sunset,
+      default: horrible_green,
     },
     primary: {
       main: alloy_orange,
