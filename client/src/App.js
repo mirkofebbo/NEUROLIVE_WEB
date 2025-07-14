@@ -16,9 +16,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/HSWBA" element={<HSWBA />} />
-        <Route path="/DW" element={<DW />} />
+        <Route path="/NEUROLIVE_WEB/" element={<DW />} />
+        <Route path="/NEUROLIVE_WEB/HSWBA" element={<HSWBA />} />
+        <Route path="/NEUROLIVE_WEB/DW" element={<DW />} />
       </Routes>
     </BrowserRouter>
   );
