@@ -31,7 +31,7 @@ const Theme = createTheme({
   },
   palette: {
     background: {
-      default: horrible_green,
+      default: sunset,
     },
     primary: {
       main: alloy_orange,
