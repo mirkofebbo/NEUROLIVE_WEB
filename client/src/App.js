@@ -20,7 +20,8 @@ function App() {
           {page === 'HSWBA' && <HSWBA />}
           {page === 'DW' && <DW />}
           {page === 'Albane' && <Albane />}
-          {page === 'Test' && <Test />}
+          {/* {page === 'Test' && <Test />}
+           */}
         {/* <Footer></Footer> */}
       </Box>
     </div>

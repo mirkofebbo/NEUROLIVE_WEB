@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as d3 from 'd3';
-import { Card, CardContent, Tooltip, Select, MenuItem, Slider } from '@mui/material';
+import { Card, CardContent, Tooltip, Select, MenuItem, Slider, Button } from '@mui/material';
 import jsonData from '../../data/demo.json';
 import { schemeTableau10 } from 'd3-scale-chromatic';
 
@@ -43,6 +43,51 @@ const Timeline = ({ props, onDayChange, onParticipantClick, onSoloClick, onSongC
 
     const [value, setValue] = useState([min_domain, max_domain]);
     const [width, setWidth] = useState(window.innerWidth - 100);
+
+    // SAVE SVG FUNCTIONALITY
+    const handleSaveSvg = () => {
+        const container = ref.current;
+        if (!container) return;
+
+        const svgEl = container.querySelector('svg');
+        if (!svgEl) return;
+
+        // Clone so we don't mutate the on-screen SVG
+        const clone = svgEl.cloneNode(true);
+
+        // Ensure namespaces exist (helps when opening in other tools)
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+
+        // Optional: embed a white background (otherwise transparent)
+        // const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        // bg.setAttribute('x', '0');
+        // bg.setAttribute('y', '0');
+        // bg.setAttribute('width', '100%');
+        // bg.setAttribute('height', '100%');
+        // bg.setAttribute('fill', 'white');
+        // clone.insertBefore(bg, clone.firstChild);
+
+        const serializer = new XMLSerializer();
+        let svgString = serializer.serializeToString(clone);
+
+        // Some browsers/tools like an XML declaration; harmless to add
+        if (!svgString.startsWith('<?xml')) {
+            svgString = `<?xml version="1.0" encoding="UTF-8"?>\n` + svgString;
+        }
+
+        const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `timeline-${selectedDay}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        URL.revokeObjectURL(url);
+    };
 
     const handleChange = (event, newValue) => {
         if (Array.isArray(newValue)) {
@@ -273,22 +318,22 @@ const Timeline = ({ props, onDayChange, onParticipantClick, onSoloClick, onSongC
             });
 
         interval.append('text')
-            .attr('x', d => x(Math.max(d.start, value[0])) + 3) 
+            .attr('x', d => x(Math.max(d.start, value[0])) + 3)
             .attr('y', d => {
                 if (d.type === 'song') return 15;
                 if (d.type === 'solo') return 23.5;
-                return (d.lane + 3) *9.95 + barHeight / 2; 
+                return (d.lane + 3) * 9.95 + barHeight / 2;
             })
-            .attr('dy', '.35em') 
-            .attr('text-anchor', 'start') 
+            .attr('dy', '.35em')
+            .attr('text-anchor', 'start')
             .text(d => {
                 // if (d.type === 'solo') return `${d.name}`;
                 if (d.type === 'participant') return `${d.name}`;
-                return ''; 
+                return '';
             })
-            .attr('fill', rich_black) 
+            .attr('fill', rich_black)
             .attr('font-weight', 'bolder')
-            .attr('font-size', '10px'); 
+            .attr('font-size', '10px');
 
     }, [value, width, selectedDay, onDayChange, onParticipantClick, onSoloClick, onSongClick]);
 
@@ -301,6 +346,9 @@ const Timeline = ({ props, onDayChange, onParticipantClick, onSoloClick, onSongC
                         <MenuItem value='SUN'>SUNDAY</MenuItem>
                     </Select>
                 </Tooltip>
+                <Button variant="outlined" onClick={handleSaveSvg} sx={{ marginLeft: '20px', height: '30px' }}>
+                    Save SVG
+                </Button>
                 <div ref={ref}></div> {/* Use ref instead of id */}
                 <Slider
                     value={value}
